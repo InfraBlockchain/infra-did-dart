@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:eosdart/eosdart.dart';
 import 'package:eosdart_ecc/eosdart_ecc.dart';
 
@@ -44,13 +46,24 @@ class InfraDID {
     didOwnerPrivateKeyObj = arrayToHex(privateKey.data);
   }
 
-  Future<double> getNonceForPubKeyDid() async {
+  Future<int> getNonceForPubKeyDid() async {
     assert(this.jsonRpc != Null, "jsonRpc should not be null");
-    var rows = jsonRpc.getTableRows(
-        this.registryContract, this.registryContract, 'pubkeydid',
-        lower: "", upper: "", indexPosition: 2, keyType: "sha256");
+    IKey publicKey = stringToPublicKey(didPubKey);
+    Uint8List sliceKey = publicKey.data.sublist(1, publicKey.data.length - 1);
+    String sliceKeyHex = arrayToHex(sliceKey);
 
-    return 1;
+    List<Map<String, dynamic>> rows = await jsonRpc.getTableRows(
+        this.registryContract, this.registryContract, 'pubkeydid',
+        lower: sliceKeyHex,
+        upper: sliceKeyHex,
+        indexPosition: 2,
+        keyType: "sha256");
+
+    if (rows.length != 0) {
+      return rows[0]['nonce'];
+    } else {
+      return 0;
+    }
   }
 
   String _digestForPubKeyDIDSetAttributeSig() {
