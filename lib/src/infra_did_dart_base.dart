@@ -1,6 +1,8 @@
 import 'package:eosdart/eosdart.dart';
 import 'package:eosdart_ecc/eosdart_ecc.dart';
 
+import '../infra_did_dart.dart';
+
 class InfraDID {
   String defaultPubKeyDidSignDataPrefix = "infra-mainnet";
   late String registryContract;
@@ -38,5 +40,61 @@ class InfraDID {
     } else {
       didAccount = idNetwork;
     }
+    IKey privateKey = binToPrivateKey(didOwnerPrivateKey);
+    didOwnerPrivateKeyObj = arrayToHex(privateKey.data);
   }
+
+  Future<double> getNonceForPubKeyDid() async {
+    assert(this.jsonRpc != Null, "jsonRpc should not be null");
+    var rows = jsonRpc.getTableRows(
+        this.registryContract, this.registryContract, 'pubkeydid',
+        lower: "", upper: "", indexPosition: 2, keyType: "sha256");
+
+    return 1;
+  }
+
+  String _digestForPubKeyDIDSetAttributeSig() {
+    return "";
+  }
+
+  String _digestForPubKeyDIDChangeOwnerSig() {
+    return "";
+  }
+
+  String _digestForPubKeyDIDRevokeSig() {
+    return "";
+  }
+
+  String _digestForPubKeyDIDClearSig() {
+    return "";
+  }
+
+  void setAttributePubKeyDID() {}
+
+  void changeOwnerPubKeyDID() {}
+
+  void revokePubKeyDID() {}
+
+  void clearPubKeyDID() {}
+
+  void setAttributeAccountDID() {}
+
+  void registerTrustedPubKeyDID() {}
+
+  void updateTrustedPubKeyDID() {}
+
+  void removeTrustedPubKeyDID() {}
+
+  void registerTrustedAccountDID() {}
+
+  void updateTrustedAccountDID() {}
+
+  void removeTrustedAccountDID() {}
+
+  getTrustedPubKeyDIDByAuthorizer() {}
+  getTrustedPubKeyDIDByTarget() {}
+  getTrustedPubKeyDID() {}
+  getTrustedAccountDIDByAuthorizer() {}
+  getTrustedAccountDIDByTarget() {}
+  getTrustedAccountDID() {}
 }
