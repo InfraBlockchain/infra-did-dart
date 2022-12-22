@@ -94,20 +94,174 @@ class InfraDID {
 
   void setAttributeAccountDID() {}
 
-  void registerTrustedPubKeyDID() {}
+  Future registerTrustedPubKeyDID(
+      String authorizer, String didPubKey, String properties) {
+    assert(jsonRpc != Null, "jsonRpc should not be null");
 
-  void updateTrustedPubKeyDID() {}
+    List<Authorization> auth = [
+      Authorization()
+        ..actor = authorizer
+        ..permission = 'active'
+    ];
 
-  void removeTrustedPubKeyDID() {}
+    Map data = {
+      'authorizer': authorizer,
+      'pk': didPubKey,
+      'properties': properties
+    };
 
-  void registerTrustedAccountDID() {}
+    List<Action> actions = [
+      Action()
+        ..account = registryContract
+        ..name = 'registerTrusted'
+        ..authorization = auth
+        ..data = data
+    ];
+    Transaction transaction = Transaction()..actions = actions;
 
-  void updateTrustedAccountDID() {}
+    return jsonRpc.pushTransaction(transaction, broadcast: true);
+  }
 
-  void removeTrustedAccountDID() {}
+  Future updateTrustedPubKeyDID(
+      String authorizer, String didPubKey, String properties) {
+    assert(jsonRpc != Null, "jsonRpc should not be null");
+
+    List<Authorization> auth = [
+      Authorization()
+        ..actor = authorizer
+        ..permission = 'active'
+    ];
+
+    Map data = {
+      'authorizer': authorizer,
+      'pk': didPubKey,
+      'properties': properties
+    };
+
+    List<Action> actions = [
+      Action()
+        ..account = registryContract
+        ..name = 'updateTrusted'
+        ..authorization = auth
+        ..data = data
+    ];
+    Transaction transaction = Transaction()..actions = actions;
+
+    return jsonRpc.pushTransaction(transaction, broadcast: true);
+  }
+
+  Future removeTrustedPubKeyDID(String authorizer, String didPubKey) {
+    assert(jsonRpc != Null, "jsonRpc should not be null");
+
+    List<Authorization> auth = [
+      Authorization()
+        ..actor = authorizer
+        ..permission = 'active'
+    ];
+
+    Map data = {
+      'authorizer': authorizer,
+      'pk': didPubKey,
+    };
+
+    List<Action> actions = [
+      Action()
+        ..account = registryContract
+        ..name = 'pktrstdrmv'
+        ..authorization = auth
+        ..data = data
+    ];
+    Transaction transaction = Transaction()..actions = actions;
+
+    return jsonRpc.pushTransaction(transaction, broadcast: true);
+  }
+
+  Future registerTrustedAccountDID(
+      String authorizer, String account, String properties) {
+    assert(jsonRpc != Null, "jsonRpc should not be null");
+
+    List<Authorization> auth = [
+      Authorization()
+        ..actor = authorizer
+        ..permission = 'active'
+    ];
+
+    Map data = {
+      'authorizer': authorizer,
+      'account': account,
+      'properties': properties
+    };
+
+    List<Action> actions = [
+      Action()
+        ..account = registryContract
+        ..name = 'acctrstdreg'
+        ..authorization = auth
+        ..data = data
+    ];
+    Transaction transaction = Transaction()..actions = actions;
+
+    return jsonRpc.pushTransaction(transaction, broadcast: true);
+  }
+
+  Future updateTrustedAccountDID(
+      String authorizer, String account, String properties) {
+    assert(jsonRpc != Null, "jsonRpc should not be null");
+
+    List<Authorization> auth = [
+      Authorization()
+        ..actor = authorizer
+        ..permission = 'active'
+    ];
+
+    Map data = {
+      'authorizer': authorizer,
+      'account': account,
+      'properties': properties
+    };
+
+    List<Action> actions = [
+      Action()
+        ..account = registryContract
+        ..name = 'acctrstdupdt'
+        ..authorization = auth
+        ..data = data
+    ];
+    Transaction transaction = Transaction()..actions = actions;
+
+    return jsonRpc.pushTransaction(transaction, broadcast: true);
+  }
+
+  Future removeTrustedAccountDID(String authorizer, String account) {
+    assert(jsonRpc != Null, "jsonRpc should not be null");
+
+    List<Authorization> auth = [
+      Authorization()
+        ..actor = authorizer
+        ..permission = 'active'
+    ];
+
+    Map data = {
+      'authorizer': authorizer,
+      'account': account,
+    };
+
+    List<Action> actions = [
+      Action()
+        ..account = registryContract
+        ..name = 'acctrstdrmv'
+        ..authorization = auth
+        ..data = data
+    ];
+    Transaction transaction = Transaction()..actions = actions;
+
+    return jsonRpc.pushTransaction(transaction, broadcast: true);
+  }
 
   Future<List<Map<String, dynamic>>> getTrustedPubKeyDIDByAuthorizer(
       String authorizer) async {
+    assert(this.jsonRpc != Null, "jsonRpc should not be null");
+
     List<Map<String, dynamic>> rows = await jsonRpc.getTableRows(
         this.registryContract, this.registryContract, 'trstdpkdid',
         lower: authorizer, upper: authorizer, indexPosition: 2, keyType: "i64");
@@ -117,6 +271,8 @@ class InfraDID {
 
   Future<List<Map<String, dynamic>>> getTrustedPubKeyDIDByTarget(
       String didPubKey) async {
+    assert(this.jsonRpc != Null, "jsonRpc should not be null");
+
     EOSPublicKey eosPublicKey = EOSPublicKey.fromString(didPubKey);
 
     IKey publicKey = stringToPublicKey(eosPublicKey.toString());
@@ -135,6 +291,8 @@ class InfraDID {
 
   Future<List<Map<String, dynamic>>> getTrustedPubKeyDID(
       String authorizer, String didPubKey) async {
+    assert(this.jsonRpc != Null, "jsonRpc should not be null");
+
     BigInt authorizerIndex = encodeName(authorizer);
     String hexAuthorizerIndex = authorizerIndex.toRadixString(16);
     Uint8List reveredHexAuthorizerArray =
@@ -161,6 +319,8 @@ class InfraDID {
 
   Future<List<Map<String, dynamic>>> getTrustedAccountDIDByAuthorizer(
       String authorizer) async {
+    assert(this.jsonRpc != Null, "jsonRpc should not be null");
+
     List<Map<String, dynamic>> rows = await jsonRpc.getTableRows(
         this.registryContract, this.registryContract, 'trstdaccdid',
         lower: authorizer, upper: authorizer, indexPosition: 2, keyType: "i64");
@@ -170,6 +330,8 @@ class InfraDID {
 
   Future<List<Map<String, dynamic>>> getTrustedAccountDIDByTarget(
       String account) async {
+    assert(this.jsonRpc != Null, "jsonRpc should not be null");
+
     List<Map<String, dynamic>> rows = await jsonRpc.getTableRows(
         this.registryContract, this.registryContract, 'trstdaccdid',
         lower: account, upper: account, indexPosition: 3, keyType: "i64");
