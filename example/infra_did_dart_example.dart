@@ -4,15 +4,15 @@ import 'package:eosdart_ecc/eosdart_ecc.dart';
 
 Future<void> main() async {
   // EOSPrivateKey privateKey = EOSPrivateKey.fromString(
-  //     'PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V');
+  //     '5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3');
 
   // // Get the related EOS public key
   // EOSPublicKey publicKey = privateKey.toEOSPublicKey();
   // // Print the EOS public key
   // print(publicKey.toString());
 
-  // IKey a = binToPrivateKey(
-  //     "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+  // IKey a =
+  //     binToPrivateKey("5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3");
   // String b = arrayToHex(a.data);
   // print(b);
 
@@ -26,12 +26,15 @@ Future<void> main() async {
       "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
       "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
       "fmapkumrotfc",
-      "http://localhost:8888");
+      "http://localhost:8888",
+      "fmapkumrotfc",
+      "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
 
   // print(await awesome.getNonceForPubKeyDid());
   // print(await awesome.getTrustedAccountDID("qwexfhmvvdci", "fmapkumrotfc"));
-  print(await awesome.getTrustedPubKeyDID("qwexfhmvvdci",
-      "PUB_K1_584qGNgteYFppoisbDz6vBFArrw3As8qeeRCekLepG4pJVrhJt"));
+  // print(await awesome.getTrustedPubKeyDID("qwexfhmvvdci",
+  //     "PUB_K1_584qGNgteYFppoisbDz6vBFArrw3As8qeeRCekLepG4pJVrhJt"));
+  await awesome.setAttributePubKeyDID("fmapkumrotfc", "fmapkumrotfc");
 
   // print(encodeName("eosio"));
   // BigInt authorizerIndex = BigInt.from(encodeName("eosio"));
