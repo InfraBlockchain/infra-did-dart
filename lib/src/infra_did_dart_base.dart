@@ -48,8 +48,10 @@ class InfraDID {
 
   Future<int> getNonceForPubKeyDid() async {
     assert(this.jsonRpc != Null, "jsonRpc should not be null");
-    IKey publicKey = stringToPublicKey(didPubKey);
-    Uint8List sliceKey = publicKey.data.sublist(1, publicKey.data.length - 1);
+    EOSPublicKey eosPublicKey = EOSPublicKey.fromString(didPubKey);
+
+    IKey publicKey = stringToPublicKey(eosPublicKey.toString());
+    Uint8List sliceKey = publicKey.data.sublist(1, publicKey.data.length);
     String sliceKeyHex = arrayToHex(sliceKey);
 
     List<Map<String, dynamic>> rows = await jsonRpc.getTableRows(
@@ -104,10 +106,91 @@ class InfraDID {
 
   void removeTrustedAccountDID() {}
 
-  getTrustedPubKeyDIDByAuthorizer() {}
-  getTrustedPubKeyDIDByTarget() {}
-  getTrustedPubKeyDID() {}
-  getTrustedAccountDIDByAuthorizer() {}
-  getTrustedAccountDIDByTarget() {}
-  getTrustedAccountDID() {}
+  Future<List<Map<String, dynamic>>> getTrustedPubKeyDIDByAuthorizer(
+      String authorizer) async {
+    List<Map<String, dynamic>> rows = await jsonRpc.getTableRows(
+        this.registryContract, this.registryContract, 'trstdpkdid',
+        lower: authorizer, upper: authorizer, indexPosition: 2, keyType: "i64");
+
+    return rows;
+  }
+
+  Future<List<Map<String, dynamic>>> getTrustedPubKeyDIDByTarget(
+      String didPubKey) async {
+    EOSPublicKey eosPublicKey = EOSPublicKey.fromString(didPubKey);
+
+    IKey publicKey = stringToPublicKey(eosPublicKey.toString());
+    Uint8List sliceKey = publicKey.data.sublist(1, publicKey.data.length);
+    String sliceKeyHex = arrayToHex(sliceKey);
+
+    List<Map<String, dynamic>> rows = await jsonRpc.getTableRows(
+        this.registryContract, this.registryContract, 'trstdpkdid',
+        lower: sliceKeyHex,
+        upper: sliceKeyHex,
+        indexPosition: 3,
+        keyType: "sha256");
+
+    return rows;
+  }
+
+  Future<List<Map<String, dynamic>>> getTrustedPubKeyDID(
+      String authorizer, String didPubKey) async {
+    BigInt authorizerIndex = encodeName(authorizer);
+    String hexAuthorizerIndex = authorizerIndex.toRadixString(16);
+    Uint8List reveredHexAuthorizerArray =
+        Uint8List.fromList(stringToHex(hexAuthorizerIndex).reversed.toList());
+
+    EOSPublicKey eosPublicKey = EOSPublicKey.fromString(didPubKey);
+    IKey publicKey = stringToPublicKey(eosPublicKey.toString());
+
+    Uint8List sliceKey = concatUint8List([
+      reveredHexAuthorizerArray,
+      publicKey.data.sublist(9, publicKey.data.length)
+    ]);
+    String sliceKeyHex = arrayToHex(sliceKey);
+    print(sliceKeyHex);
+    List<Map<String, dynamic>> rows = await jsonRpc.getTableRows(
+        this.registryContract, this.registryContract, 'trstdpkdid',
+        lower: sliceKeyHex,
+        upper: sliceKeyHex,
+        indexPosition: 4,
+        keyType: "sha256");
+
+    return rows;
+  }
+
+  Future<List<Map<String, dynamic>>> getTrustedAccountDIDByAuthorizer(
+      String authorizer) async {
+    List<Map<String, dynamic>> rows = await jsonRpc.getTableRows(
+        this.registryContract, this.registryContract, 'trstdaccdid',
+        lower: authorizer, upper: authorizer, indexPosition: 2, keyType: "i64");
+
+    return rows;
+  }
+
+  Future<List<Map<String, dynamic>>> getTrustedAccountDIDByTarget(
+      String account) async {
+    List<Map<String, dynamic>> rows = await jsonRpc.getTableRows(
+        this.registryContract, this.registryContract, 'trstdaccdid',
+        lower: account, upper: account, indexPosition: 3, keyType: "i64");
+
+    return rows;
+  }
+
+  Future<List<Map<String, dynamic>>> getTrustedAccountDID(
+      String authorizer, String account) async {
+    assert(this.jsonRpc != Null, "jsonRpc should not be null");
+    BigInt authorizerIndex = encodeName(authorizer);
+    BigInt nameIndex = encodeName(account);
+    BigInt index = authorizerIndex * BigInt.from(2).pow(64) + nameIndex;
+
+    List<Map<String, dynamic>> rows = await jsonRpc.getTableRows(
+        this.registryContract, this.registryContract, 'trstdaccdid',
+        lower: index.toString(),
+        upper: index.toString(),
+        indexPosition: 4,
+        keyType: "i128");
+
+    return rows;
+  }
 }

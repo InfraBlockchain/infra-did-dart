@@ -25,11 +25,19 @@ Future<void> main() async {
   var awesome = InfraDID(
       "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
       "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
-      "infradidregi",
-      "https://hyperion-t1.bc-labs.net");
+      "fmapkumrotfc",
+      "http://localhost:8888");
 
-  print(await awesome.getNonceForPubKeyDid());
+  // print(await awesome.getNonceForPubKeyDid());
+  // print(await awesome.getTrustedAccountDID("qwexfhmvvdci", "fmapkumrotfc"));
+  print(await awesome.getTrustedPubKeyDID("qwexfhmvvdci",
+      "PUB_K1_584qGNgteYFppoisbDz6vBFArrw3As8qeeRCekLepG4pJVrhJt"));
 
+  // print(encodeName("eosio"));
+  // BigInt authorizerIndex = BigInt.from(encodeName("eosio"));
+  // BigInt nameIndex = BigInt.from(encodeName("eosio"));
+  // BigInt index = authorizerIndex * BigInt.from(2).pow(64) + nameIndex;
+  // print(index.toString());
   // EOSClient client = EOSClient('https://eos.greymass.com', 'v1');
 
   // Get Tables
