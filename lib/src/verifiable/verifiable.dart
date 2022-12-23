@@ -61,9 +61,9 @@ class InfraVerifiable {
     var exp = DateTime(now.year, now.month, now.day, now.hour + 10);
 
     verifiablePresentation["vp"] = {};
-    verifiablePresentation["vp"]["@context"] =
-        "https://www.w3.org/2018/credentials/v1";
-    verifiablePresentation["vp"]["type"] = "VerifiablePresentation";
+    verifiablePresentation["vp"]
+        ["@context"] = ["https://www.w3.org/2018/credentials/v1"];
+    verifiablePresentation["vp"]["type"] = ["VerifiablePresentation"];
     verifiablePresentation["vp"]
         ["verifiableCredential"] = [verifiableCredentialJWT];
     verifiablePresentation["iss"] = holderDid;

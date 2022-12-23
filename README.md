@@ -363,8 +363,8 @@ Verified Presentation Result
 ```json
 {
   "vp": {
-    "@context": "https://www.w3.org/2018/credentials/v1",
-    "type": "VerifiablePresentation",
+    "@context": ["https://www.w3.org/2018/credentials/v1"],
+    "type": ["VerifiablePresentation"],
     "verifiableCredential": [
       "eyJhbGciOiJFUzI1NiJ9.eyJ2YyI6eyJpZCI6ImRpZDppbmZyYTowMTpQVUJfSzFfNk1SeUFqUXE4dWQ3aFZOWWNmblZQSnFjVnBzY041U284Qmh0SHVHWXFFVDVCb0RxNjMiLCJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSIsImh0dHBzOi8vY29vdi5pby9kb2NzL3ZjL3BlcnNvbmFsIl0sInR5cGUiOlsiVmVyaWZpYWJsZUNyZWRlbnRpYWwiLCJQZXJzb25hbCJdLCJjcmVkZW50aWFsU3ViamVjdCI6eyJkb2IiOiIxOTkxMDQwNSJ9fSwic3ViIjoiZGlkOmluZnJhOjAxOlBVQl9LMV82TVJ5QWpRcTh1ZDdoVk5ZY2ZuVlBKcWNWcHNjTjVTbzhCaHRIdUdZcUVUNUJvRHE2MyIsInZlciI6IjAuOSIsImlzcyI6ImRpZDppbmZyYTowMTpQVUJfSzFfNk1SeUFqUXE4dWQ3aFZOWWNmblZQSnFjVnBzY041U284Qmh0SHVHWXFFVDVCb0RxNjMifQ.mqEdDQAmNquUvRy7XjjbeW7unlsjjP7UHhFjYzVRItLoFbiM40KG_aHLqRMiF7NjX3vuAB88ukPtkAXU7PkoKA"
     ]
