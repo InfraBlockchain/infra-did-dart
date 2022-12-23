@@ -14,7 +14,11 @@ dev_dependencies:
   test: ^1.16.0
 dependencies:
   crypto: ^3.0.2
+  dart_jsonwebtoken: ^2.6.2
+  dart_ssi: ^1.0.5
+  ecdsa: ^0.0.4
   eosdart: ^0.4.8
   eosdart_ecc: ^0.4.4
+  jose: ^0.3.3
   pointycastle: ^3.6.2
   secp256k1: ^0.3.0
