@@ -15,7 +15,8 @@ void main() {
     });
 
     test('setAttributePubKeyDID', () async {
-      await infra.setAttributePubKeyDID("key", "value");
+      await infra.setAttributePubKeyDID(
+          "svc/MessagingService", "https://infradid.com/pk/3/mysvcr90");
     });
 
     test('changeOwnerPubKeyDID', () async {
@@ -32,7 +33,8 @@ void main() {
     });
 
     test('setAttributeAccountDID', () async {
-      await infra.setAttributeAccountDID("key", "value");
+      await infra.setAttributeAccountDID(
+          "svc/MessagingService", "https://infradid.com/pk/3/mysvcr90");
     });
 
     test('registerTrustedPubKeyDID', () async {
