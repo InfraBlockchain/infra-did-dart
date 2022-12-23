@@ -5,18 +5,21 @@ import 'package:eosdart_ecc/eosdart_ecc.dart';
 Future<void> main() async {
   Resolver resolver = Resolver("fmapkumrotfc", "01", "http://localhost:8888");
   Map credentials = {
-    "@context": ["https://www.w3.org/2018/credentials/v1"],
-    "id": "http://example.vc/credentials/123532",
-    "type": ["VerifiableCredential", "VaccinationCredential"],
-    "issuer":
-        "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
-    "issuanceDate": "2021-03-17T12:17:26.000Z",
-    "credentialSubject": {
+    "vc": {
       "id":
           "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
-      "claim1": "claim1_value",
-      "claim2": "claim2_value"
-    }
+      "@context": [
+        "https://www.w3.org/2018/credentials/v1",
+        "https://coov.io/docs/vc/personal"
+      ],
+      "type": ["VerifiableCredential", "Personal"],
+      "credentialSubject": {"dob": "19910405"}
+    },
+    "sub":
+        "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+    "ver": "0.9",
+    "iss":
+        "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63"
   };
 
   String vc = await InfraVerifiable().createVerifiableCredential(credentials,

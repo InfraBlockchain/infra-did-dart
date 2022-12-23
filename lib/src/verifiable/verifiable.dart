@@ -27,7 +27,7 @@ class InfraVerifiable {
     var jws =
         JsonWebSignature.fromCompactSerialization(verifiableCredentialJWT);
     var payload = jws.unverifiedPayload.jsonContent;
-    String issuer = payload["issuer"];
+    String issuer = payload["iss"];
     var issuerDidDocument = await resolver.resolve(issuer);
     Map issuerVerificationMethod =
         issuerDidDocument["didDocument"]["verificationMethods"];
@@ -56,14 +56,16 @@ class InfraVerifiable {
     var now = DateTime.now();
     var exp = DateTime(now.year, now.month, now.day, now.hour + 10);
 
-    verifiablePresentation["@context"] =
+    verifiablePresentation["vp"] = {};
+    verifiablePresentation["vp"]["@context"] =
         "https://www.w3.org/2018/credentials/v1";
-    verifiablePresentation["type"] = "VerifiablePresentation";
-    verifiablePresentation["verifiableCredential"] = [verifiableCredentialJWT];
-    verifiablePresentation["holder"] = holderDid;
-    verifiablePresentation["verifier"] = verifierDid;
-    verifiablePresentation["issuanceDate"] = now.toIso8601String();
-    verifiablePresentation["expirationDate"] = exp.toIso8601String();
+    verifiablePresentation["vp"]["type"] = "VerifiablePresentation";
+    verifiablePresentation["vp"]
+        ["verifiableCredential"] = [verifiableCredentialJWT];
+    verifiablePresentation["iss"] = holderDid;
+    verifiablePresentation["aud"] = verifierDid;
+    verifiablePresentation["nbf"] = now.millisecondsSinceEpoch;
+    verifiablePresentation["exp"] = exp.millisecondsSinceEpoch;
 
     var builder = JsonWebSignatureBuilder();
     builder.jsonContent = verifiablePresentation;
@@ -77,7 +79,7 @@ class InfraVerifiable {
     var jws =
         JsonWebSignature.fromCompactSerialization(verifiablePresentationJWT);
     var payload = jws.unverifiedPayload.jsonContent;
-    String holder = payload["holder"];
+    String holder = payload["iss"];
     var holderDidDocument = await resolver.resolve(holder);
     Map holderVerificationMethod =
         holderDidDocument["didDocument"]["verificationMethods"];
