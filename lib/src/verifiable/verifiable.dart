@@ -1,3 +1,5 @@
+import 'package:eosdart/eosdart.dart';
+import 'package:eosdart_ecc/eosdart_ecc.dart';
 import 'package:jose/jose.dart';
 import 'package:secp256k1/secp256k1.dart';
 
@@ -5,8 +7,9 @@ import '../../infra_did_dart.dart';
 
 class InfraVerifiable {
   Future<String> createVerifiableCredential(
-      Map credential, String privatekey) async {
-    PrivateKey sk = PrivateKey.fromHex(privatekey);
+      Map credential, String eosPrivateKey) async {
+    IKey eosSk = binToPrivateKey(eosPrivateKey);
+    PrivateKey sk = PrivateKey.fromHex(arrayToHex(eosSk.data));
     PublicKey pk = sk.publicKey;
     JsonWebKey jwk = JsonWebKey.ec(
         curve: "P-256K",
@@ -47,9 +50,10 @@ class InfraVerifiable {
   }
 
   String createVerifiablePresentation(String verifiableCredentialJWT,
-      String privatekey, String holderDid, String verifierDid) {
-    PrivateKey pk = PrivateKey.fromHex(privatekey);
-    JsonWebKey jwk = JsonWebKey.ec(curve: "P-256K", privateKey: pk.D);
+      String eosPrivateKey, String holderDid, String verifierDid) {
+    IKey eosSk = binToPrivateKey(eosPrivateKey);
+    PrivateKey sk = PrivateKey.fromHex(arrayToHex(eosSk.data));
+    JsonWebKey jwk = JsonWebKey.ec(curve: "P-256K", privateKey: sk.D);
 
     Map verifiablePresentation = {};
 
