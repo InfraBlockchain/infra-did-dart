@@ -1,6 +1,24 @@
 import 'dart:typed_data';
 
 import 'package:eosdart/eosdart.dart';
+import 'package:eosdart_ecc/eosdart_ecc.dart';
+
+class InfraKey {
+  late String privateKey;
+  late String publicKey;
+  late String did;
+  String generateDid(String networkId) {
+    EOSPrivateKey sk = EOSPrivateKey.fromRandom();
+    EOSPublicKey pk = sk.toEOSPublicKey();
+    privateKey = privateKeyToBin(binToPrivateKey(sk.toString()));
+    publicKey = convertLegacyPublicKey(pk.toString());
+    did = "did:infra:${networkId}:${publicKey}";
+    return did;
+  }
+
+  Map<String, dynamic> toJson() =>
+      {'privateKey': privateKey, 'publicKey': publicKey, 'did': did};
+}
 
 /// Convert key in `s` to binary form
 IKey binToPrivateKey(String s) {
@@ -9,7 +27,15 @@ IKey binToPrivateKey(String s) {
   } else if (s.substring(0, 7) == 'PVT_K1_') {
     return _stringToKey(s.substring(7), KeyType.k1, privateKeyDataSize, 'K1');
   } else {
-    throw 'unrecognized private key format';
+    var whole = base58ToBinary(privateKeyDataSize + 5, s);
+    IKey key = IKey(KeyType.k1, Uint8List(privateKeyDataSize));
+    if (whole[0] != 0x80) {
+      throw Exception('unrecognized private key type');
+    }
+    for (int i = 0; i < privateKeyDataSize; ++i) {
+      key.data[i] = whole[i + 1];
+    }
+    return key;
   }
 }
 
