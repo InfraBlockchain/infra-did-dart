@@ -32,7 +32,9 @@ class InfraDID {
     jsonRpc = EOSClient(rpcEndpoint, 'v1',
         privateKeys: sigProviderPrivKeys.toSet().toList());
     List<String> splitedDID = did.split(":");
-    assert(splitedDID.length != 4, "Wrong DID format");
+    if (splitedDID.length != 4) {
+      throw FormatException('Wrong DID format');
+    }
     String idNetwork = splitedDID[3];
     if (idNetwork.startsWith("PUB_K1") ||
         idNetwork.startsWith("PUB_R1") ||
