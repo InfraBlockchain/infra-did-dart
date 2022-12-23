@@ -370,7 +370,7 @@ Verified Presentation Result
     ]
   },
   "iss": "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
-  "aud": "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+  "aud": ["did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63"],
   "nbf": "1671771659477",
   "exp": "1671807600000"
 }

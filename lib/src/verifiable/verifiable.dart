@@ -67,7 +67,7 @@ class InfraVerifiable {
     verifiablePresentation["vp"]
         ["verifiableCredential"] = [verifiableCredentialJWT];
     verifiablePresentation["iss"] = holderDid;
-    verifiablePresentation["aud"] = verifierDid;
+    verifiablePresentation["aud"] = [verifierDid];
     verifiablePresentation["nbf"] = now.millisecondsSinceEpoch;
     verifiablePresentation["exp"] = exp.millisecondsSinceEpoch;
 
