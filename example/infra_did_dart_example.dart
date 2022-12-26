@@ -1,4 +1,3 @@
-import 'package:eosdart/eosdart.dart';
 import 'package:infra_did_dart/infra_did_dart.dart';
 import 'package:eosdart_ecc/eosdart_ecc.dart';
 
@@ -11,8 +10,8 @@ Future<void> main() async {
       "fmapkumrotfc",
       "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
 
-  print(await infra.getTrustedAccountDID("qwexfhmvvdci", "fmapkumrotfc"));
-  print(await infra.getTrustedPubKeyDID("qwexfhmvvdci",
-      "PUB_K1_584qGNgteYFppoisbDz6vBFArrw3As8qeeRCekLepG4pJVrhJt"));
+  // print(await infra.getTrustedAccountDID("qwexfhmvvdci", "fmapkumrotfc"));
+  // print(await infra.getTrustedPubKeyDID("qwexfhmvvdci",
+  //     "PUB_K1_584qGNgteYFppoisbDz6vBFArrw3As8qeeRCekLepG4pJVrhJt"));
   await infra.setAttributePubKeyDID("fmapkumrotfc", "fmapkumrotfc");
 }

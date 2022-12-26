@@ -11,14 +11,18 @@ environment:
 
 dev_dependencies:
   lints: ^2.0.0
-  test: ^1.16.0
+  test: ^1.19.2
+  build_runner: ^2.1.4
+  json_serializable: ^6.0.1
+
 dependencies:
   crypto: ^3.0.2
   dart_jsonwebtoken: ^2.6.2
   dart_ssi: ^1.0.5
   ecdsa: ^0.0.4
-  eosdart: ^0.4.8
   eosdart_ecc: ^0.4.4
   jose: ^0.3.3
-  pointycastle: ^3.6.2
   secp256k1: ^0.3.0
+  http: ^0.13.4
+  json_annotation: ^4.3.0
+  pointycastle: ^3.3.5

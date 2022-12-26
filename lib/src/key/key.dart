@@ -1,16 +1,18 @@
 import 'dart:typed_data';
 
-import 'package:eosdart/eosdart.dart';
 import 'package:eosdart_ecc/eosdart_ecc.dart';
+
+import '../../infra_did_dart.dart';
 
 class InfraKey {
   late String privateKey;
   late String publicKey;
   late String did;
+
   String generateDid(String networkId) {
     EOSPrivateKey sk = EOSPrivateKey.fromRandom();
     EOSPublicKey pk = sk.toEOSPublicKey();
-    privateKey = privateKeyToBin(binToPrivateKey(sk.toString()));
+    privateKey = privateKeyToString(stringToPrivateKey(sk.toString()));
     publicKey = convertLegacyPublicKey(pk.toString());
     did = "did:infra:${networkId}:${publicKey}";
     return did;
@@ -20,7 +22,7 @@ class InfraKey {
       {'privateKey': privateKey, 'publicKey': publicKey, 'did': did};
 }
 
-/// Convert key in `s` to binary form
+/*
 IKey binToPrivateKey(String s) {
   if (s.substring(0, 7) == 'PVT_R1_') {
     return _stringToKey(s.substring(7), KeyType.r1, privateKeyDataSize, 'R1');
@@ -39,7 +41,6 @@ IKey binToPrivateKey(String s) {
   }
 }
 
-/// Convert `key` to string (base-58) form */
 String privateKeyToBin(IKey key) {
   if (key.type == KeyType.r1) {
     return _keyToString(key, 'R1', 'PVT_R1_');
@@ -74,3 +75,5 @@ String _keyToString(IKey key, String suffix, String prefix) {
   }
   return prefix + binaryToBase58(whole);
 }
+
+*/

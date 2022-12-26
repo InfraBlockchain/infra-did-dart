@@ -1,7 +1,8 @@
 import 'dart:typed_data';
 
-import 'package:eosdart/eosdart.dart';
 import 'package:eosdart_ecc/eosdart_ecc.dart';
+
+import '../../infra_did_dart.dart';
 
 class Resolver {
   String INFRA_DID_NONCE_VALUE_FOR_REVOKED_PUB_KEY_DID = "65535";

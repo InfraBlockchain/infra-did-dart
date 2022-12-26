@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
-import 'package:eosdart/eosdart.dart';
 import 'package:eosdart_ecc/eosdart_ecc.dart';
 import 'package:secp256k1/secp256k1.dart';
 

@@ -5,7 +5,7 @@ String charmap = ".12345abcdefghijklmnopqrstuvwxyz";
 
 int charidx(var c) {
   var idx = charmap.indexOf(c);
-  if (idx != -1) {
+  if (idx == -1) {
     throw FormatException('invalid character');
   }
   return idx;

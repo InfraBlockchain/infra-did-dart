@@ -1,4 +1,3 @@
-import 'package:eosdart/eosdart.dart';
 import 'package:infra_did_dart/infra_did_dart.dart';
 import 'package:eosdart_ecc/eosdart_ecc.dart';
 
