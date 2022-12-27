@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
@@ -19,7 +20,8 @@ class InfraDID {
 
   InfraDID(this.did, String didOwnerPrivateKey, this.registryContract,
       String rpcEndpoint, this.txfeePayerAccount,
-      [String txfeePayerPrivateKey = "", String pubKeyDidSignDataPrefix = ""]) {
+      [String txfeePayerPrivateKey = "",
+      String pubKeyDidSignDataPrefix = "infra-mainnet"]) {
     defaultPubKeyDidSignDataPrefix = pubKeyDidSignDataPrefix != ""
         ? "infra-mainnet"
         : pubKeyDidSignDataPrefix;
@@ -66,7 +68,7 @@ class InfraDID {
     }
   }
 
-  Digest _digestForPubKeyDIDSetAttributeSig(
+  Uint8List _digestForPubKeyDIDSetAttributeSig(
       String pubkey, String key, String value, int nonce) {
     String actionName = "pksetattr";
     int dataLength = defaultPubKeyDidSignDataPrefix.length +
@@ -77,21 +79,19 @@ class InfraDID {
         value.length;
     IKey pub = stringToPublicKey(pubkey);
 
-    SerialBuffer buf = SerialBuffer(Uint8List(dataLength));
-    buf.pushString(defaultPubKeyDidSignDataPrefix);
-    buf.pushString(actionName);
+    SerialBuffer buf = SerialBuffer(Uint8List(0));
+    buf.length = 0;
+    buf.pushArray(utf8.encode(defaultPubKeyDidSignDataPrefix));
+    buf.pushArray(utf8.encode(actionName));
     buf.pushPublicKey(pubkey);
     buf.pushUint16(nonce);
-    buf.pushString(key);
-    buf.pushString(value);
+    buf.pushArray(utf8.encode(key));
+    buf.pushArray(utf8.encode(value));
 
-    var bufArray = buf.array?.toList();
-    var digest = sha256.convert(bufArray!);
-
-    return digest;
+    return buf.array!;
   }
 
-  Digest _digestForPubKeyDIDChangeOwnerSig(
+  Uint8List _digestForPubKeyDIDChangeOwnerSig(
       String pubkey, String newOwnerPubKey, int nonce) {
     String actionName = "pkchowner";
     int dataLength = defaultPubKeyDidSignDataPrefix.length +
@@ -104,21 +104,16 @@ class InfraDID {
     IKey newPub = stringToPublicKey(newOwnerPubKey);
 
     SerialBuffer buf = SerialBuffer(Uint8List(0));
-    buf.pushString(defaultPubKeyDidSignDataPrefix);
-    buf.pushString(actionName);
-    buf.push([pub.type.index]);
-    buf.pushArray(pub.data);
+    buf.pushArray(utf8.encode(defaultPubKeyDidSignDataPrefix));
+    buf.pushArray(utf8.encode(actionName));
+    buf.pushPublicKey(pubkey);
     buf.pushUint16(nonce);
-    buf.push([newPub.type.index]);
-    buf.pushArray(newPub.data);
+    buf.pushPublicKey(newOwnerPubKey);
 
-    var bufArray = buf.array?.toList();
-    var digest = sha256.convert(bufArray!);
-
-    return digest;
+    return buf.array!;
   }
 
-  Digest _digestForPubKeyDIDRevokeSig(String pubkey, int nonce) {
+  Uint8List _digestForPubKeyDIDRevokeSig(String pubkey, int nonce) {
     String actionName = "pkdidrevoke";
     int dataLength = defaultPubKeyDidSignDataPrefix.length +
         actionName.length +
@@ -128,19 +123,15 @@ class InfraDID {
     IKey pub = stringToPublicKey(pubkey);
 
     SerialBuffer buf = SerialBuffer(Uint8List(0));
-    buf.pushString(defaultPubKeyDidSignDataPrefix);
-    buf.pushString(actionName);
-    buf.push([pub.type.index]);
-    buf.pushArray(pub.data);
+    buf.pushArray(utf8.encode(defaultPubKeyDidSignDataPrefix));
+    buf.pushArray(utf8.encode(actionName));
+    buf.pushPublicKey(pubkey);
     buf.pushUint16(nonce);
 
-    var bufArray = buf.array?.toList();
-    var digest = sha256.convert(bufArray!);
-
-    return digest;
+    return buf.array!;
   }
 
-  Digest _digestForPubKeyDIDClearSig(String pubkey, int nonce) {
+  Uint8List _digestForPubKeyDIDClearSig(String pubkey, int nonce) {
     String actionName = "pkdidclear";
     int dataLength = defaultPubKeyDidSignDataPrefix.length +
         actionName.length +
@@ -150,25 +141,20 @@ class InfraDID {
     IKey pub = stringToPublicKey(pubkey);
 
     SerialBuffer buf = SerialBuffer(Uint8List(0));
-    buf.pushString(defaultPubKeyDidSignDataPrefix);
-    buf.pushString(actionName);
-    buf.push([pub.type.index]);
-    buf.pushArray(pub.data);
+    buf.pushArray(utf8.encode(defaultPubKeyDidSignDataPrefix));
+    buf.pushArray(utf8.encode(actionName));
+    buf.pushPublicKey(pubkey);
     buf.pushUint16(nonce);
 
-    var bufArray = buf.array?.toList();
-    var digest = sha256.convert(bufArray!);
-
-    return digest;
+    return buf.array!;
   }
 
   Future setAttributePubKeyDID(String key, String value) async {
     int nonce = await getNonceForPubKeyDid();
-    Digest digest =
+    Uint8List digest =
         _digestForPubKeyDIDSetAttributeSig(didPubKey, key, value, nonce);
 
-    EOSSignature signature =
-        didOwnerPrivateKeyObj.signString(digest.toString());
+    EOSSignature signature = didOwnerPrivateKeyObj.sign(digest);
 
     List<Authorization> auth = [
       Authorization()
@@ -198,9 +184,9 @@ class InfraDID {
 
   Future changeOwnerPubKeyDID(String newOwnerPubKey) async {
     int nonce = await getNonceForPubKeyDid();
-    Digest digest =
+    Uint8List digest =
         _digestForPubKeyDIDChangeOwnerSig(didPubKey, newOwnerPubKey, nonce);
-    String signature = "";
+    EOSSignature signature = didOwnerPrivateKeyObj.sign(digest);
 
     List<Authorization> auth = [
       Authorization()
@@ -228,8 +214,8 @@ class InfraDID {
 
   Future revokePubKeyDID() async {
     int nonce = await getNonceForPubKeyDid();
-    Digest digest = _digestForPubKeyDIDRevokeSig(didPubKey, nonce);
-    String signature = "";
+    Uint8List digest = _digestForPubKeyDIDRevokeSig(didPubKey, nonce);
+    EOSSignature signature = didOwnerPrivateKeyObj.sign(digest);
 
     List<Authorization> auth = [
       Authorization()
@@ -255,17 +241,19 @@ class InfraDID {
     return jsonRpc.pushTransaction(transaction, broadcast: true);
   }
 
-  Future clearPubKeyDID() {
+  Future clearPubKeyDID() async {
+    int nonce = await getNonceForPubKeyDid();
+    Uint8List digest = _digestForPubKeyDIDClearSig(didPubKey, nonce);
+
+    EOSSignature signature = didOwnerPrivateKeyObj.sign(digest);
+
     List<Authorization> auth = [
       Authorization()
         ..actor = txfeePayerAccount
         ..permission = 'active'
     ];
 
-    Map data = {
-      'pk': didPubKey,
-      'sig': "key",
-    };
+    Map data = {'pk': didPubKey, 'sig': signature.toString()};
 
     List<Action> actions = [
       Action()

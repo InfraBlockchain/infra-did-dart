@@ -10,8 +10,10 @@ Future<void> main() async {
       "fmapkumrotfc",
       "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
 
-  // print(await infra.getTrustedAccountDID("qwexfhmvvdci", "fmapkumrotfc"));
-  // print(await infra.getTrustedPubKeyDID("qwexfhmvvdci",
-  //     "PUB_K1_584qGNgteYFppoisbDz6vBFArrw3As8qeeRCekLepG4pJVrhJt"));
-  await infra.setAttributePubKeyDID("fmapkumrotfc", "fmapkumrotfc");
+  print(await infra.getTrustedAccountDID("qwexfhmvvdci", "fmapkumrotfc"));
+  print(await infra.getTrustedPubKeyDID("qwexfhmvvdci",
+      "PUB_K1_584qGNgteYFppoisbDz6vBFArrw3As8qeeRCekLepG4pJVrhJt"));
+  await infra.setAttributePubKeyDID(
+      "svc/MessagingService", "systoken.https://infradid.com/pk/3/mysvcr9");
+  await infra.clearPubKeyDID();
 }
