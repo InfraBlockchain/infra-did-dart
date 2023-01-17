@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:eosdart_ecc/eosdart_ecc.dart';
 import 'package:jose/jose.dart';
 import 'package:secp256k1/secp256k1.dart';
@@ -30,7 +32,17 @@ class InfraVerifiable {
         JsonWebSignature.fromCompactSerialization(verifiableCredentialJWT);
     var payload = jws.unverifiedPayload.jsonContent;
     String issuer = payload["iss"];
+    String vcId = payload["vc"]["id"];
+    var vcDidDocument = await resolver.resolve(vcId);
+    if (vcDidDocument["didDocument"]["deactivated"] != Null &&
+        vcDidDocument["didDocument"]["deactivated"] == true) {
+      throw Exception('invalid verifiable credential');
+    }
     var issuerDidDocument = await resolver.resolve(issuer);
+    if (issuerDidDocument["didDocument"]["deactivated"] != Null &&
+        issuerDidDocument["didDocument"]["deactivated"] == true) {
+      throw Exception('invalid issuer');
+    }
     Map issuerVerificationMethod =
         issuerDidDocument["didDocument"]["verificationMethods"];
     String issuerPublicKey = issuerVerificationMethod["publicKeyHex"];
@@ -42,10 +54,10 @@ class InfraVerifiable {
     var keyStore = JsonWebKeyStore()..addKey(jwk);
     var verified = await jws.verify(keyStore);
     if (!verified) {
-      throw Exception('Verification failed');
+      throw Exception('verifiable credential verification failed');
     }
 
-    return jws.unverifiedPayload.jsonContent;
+    return payload;
   }
 
   String createVerifiablePresentation(String verifiableCredentialJWT,
@@ -79,9 +91,22 @@ class InfraVerifiable {
 
   Future<Map> verifyVerifiablePresentation(
       String verifiablePresentationJWT, Resolver resolver) async {
+    int currentTime = DateTime.now().millisecondsSinceEpoch;
     var jws =
         JsonWebSignature.fromCompactSerialization(verifiablePresentationJWT);
     var payload = jws.unverifiedPayload.jsonContent;
+    if (payload["nbf"] != Null && payload["nbf"] > currentTime) {
+      throw Exception('verifiable presentation not valid yet');
+    }
+    if (payload["exp"] != Null && payload["exp"] < currentTime) {
+      throw Exception('verifiable presentation expired');
+    }
+
+    List<dynamic> vcs = payload["vp"]["verifiableCredential"];
+    for (String vc in vcs) {
+      verifyVerifiableCredential(vc, resolver);
+    }
+
     String holder = payload["iss"];
     var holderDidDocument = await resolver.resolve(holder);
     Map holderVerificationMethod =
@@ -95,9 +120,9 @@ class InfraVerifiable {
     var keyStore = JsonWebKeyStore()..addKey(jwk);
     var verified = await jws.verify(keyStore);
     if (!verified) {
-      throw Exception('Verification failed');
+      throw Exception('verifiable presentation verification failed');
     }
 
-    return jws.unverifiedPayload.jsonContent;
+    return payload;
   }
 }

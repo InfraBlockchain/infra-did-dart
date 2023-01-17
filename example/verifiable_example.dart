@@ -6,7 +6,7 @@ Future<void> main() async {
   Map credentials = {
     "vc": {
       "id":
-          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "did:infra:01:PUB_K1_584qGNgteYFppoisbDz6vBFArrw3As8qeeRCekLepG4pJVrhJt",
       "@context": [
         "https://www.w3.org/2018/credentials/v1",
         "https://coov.io/docs/vc/personal"

@@ -5,7 +5,7 @@ import 'package:eosdart_ecc/eosdart_ecc.dart';
 import '../../infra_did_dart.dart';
 
 class Resolver {
-  String INFRA_DID_NONCE_VALUE_FOR_REVOKED_PUB_KEY_DID = "65535";
+  int INFRA_DID_NONCE_VALUE_FOR_REVOKED_PUB_KEY_DID = 65535;
 
   String networkId;
   String registryContract;
@@ -80,13 +80,13 @@ class Resolver {
         indexPosition: 2,
         keyType: "sha256");
 
-    List<Map> pkDidAttr = [];
+    List<Map<dynamic, dynamic>> pkDidAttr = [];
     bool deactivated = false;
     String ownerPubKey = didPubKey;
 
     if (rows.isNotEmpty) {
       var pubKeyDidRow = rows[0];
-      pkDidAttr = pubKeyDidRow["attr"];
+      pkDidAttr = List<Map<dynamic, dynamic>>.from(pubKeyDidRow["attr"]);
       if (pubKeyDidRow["nonce"] ==
           INFRA_DID_NONCE_VALUE_FOR_REVOKED_PUB_KEY_DID) {
         deactivated = true;
@@ -94,8 +94,8 @@ class Resolver {
 
       List<Map<String, dynamic>> resPubKeyDIDOwner = await jsonRpc.getTableRows(
           registryContract, registryContract, 'pkdidowner',
-          lower: pubKeyDidRow["pkid"],
-          upper: pubKeyDidRow["pkid"],
+          lower: pubKeyDidRow["pkid"].toString(),
+          upper: pubKeyDidRow["pkid"].toString(),
           indexPosition: 1,
           keyType: "i64");
 
