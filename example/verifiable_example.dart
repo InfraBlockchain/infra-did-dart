@@ -30,15 +30,20 @@ Future<void> main() async {
   print(verifiedVc);
   print("");
 
+  Map options = {
+    'challenge': "this is challenge",
+  };
+
   String vp = await InfraVerifiable().createVerifiablePresentation(
       vc,
       "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
       "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
-      "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63");
+      "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+      options);
   print(vp + "\n");
 
-  Map verifiedVp =
-      await InfraVerifiable().verifyVerifiablePresentation(vp, resolver);
+  Map verifiedVp = await InfraVerifiable()
+      .verifyVerifiablePresentation(vp, resolver, options);
   print(verifiedVp);
   print("");
 }

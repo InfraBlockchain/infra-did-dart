@@ -61,7 +61,7 @@ class InfraVerifiable {
   }
 
   String createVerifiablePresentation(String verifiableCredentialJWT,
-      String eosPrivateKey, String holderDid, String verifierDid) {
+      String eosPrivateKey, String holderDid, String verifierDid, Map options) {
     IKey eosSk = stringToPrivateKey(eosPrivateKey);
     PrivateKey sk = PrivateKey.fromHex(arrayToHex(eosSk.data));
     JsonWebKey jwk = JsonWebKey.ec(curve: "P-256K", privateKey: sk.D);
@@ -81,6 +81,9 @@ class InfraVerifiable {
     verifiablePresentation["aud"] = [verifierDid];
     verifiablePresentation["nbf"] = now.millisecondsSinceEpoch ~/ 1000;
     verifiablePresentation["exp"] = exp.millisecondsSinceEpoch ~/ 1000;
+    if (options["challenge"] != Null) {
+      verifiablePresentation["nonce"] = options["challenge"];
+    }
 
     var builder = JsonWebSignatureBuilder();
     builder.jsonContent = verifiablePresentation;
@@ -90,7 +93,7 @@ class InfraVerifiable {
   }
 
   Future<Map> verifyVerifiablePresentation(
-      String verifiablePresentationJWT, Resolver resolver) async {
+      String verifiablePresentationJWT, Resolver resolver, Map options) async {
     int currentTime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     var jws =
         JsonWebSignature.fromCompactSerialization(verifiablePresentationJWT);
@@ -100,6 +103,10 @@ class InfraVerifiable {
     }
     if (payload["exp"] != Null && payload["exp"] < currentTime) {
       throw Exception('verifiable presentation expired');
+    }
+    if (options["challenge"] != Null &&
+        options["challenge"] != payload["nonce"]) {
+      throw Exception('Presentation does not contain the mandatory challenge');
     }
 
     List<dynamic> vcs = payload["vp"]["verifiableCredential"];
