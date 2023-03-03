@@ -78,10 +78,16 @@ class InfraVerifiable {
     verifiablePresentation["vp"]
         ["verifiableCredential"] = [verifiableCredentialJWT];
     verifiablePresentation["iss"] = holderDid;
-    verifiablePresentation["aud"] = [verifierDid];
-    verifiablePresentation["nbf"] = now.millisecondsSinceEpoch ~/ 1000;
-    verifiablePresentation["exp"] = exp.millisecondsSinceEpoch ~/ 1000;
-    if (options["challenge"] != Null) {
+    if (options.containsKey("aud")) {
+      verifiablePresentation["aud"] = options["aud"];
+    }
+    if (options.containsKey("nbf")) {
+      verifiablePresentation["nbf"] = options["nbf"];
+    }
+    if (options.containsKey("exp")) {
+      verifiablePresentation["exp"] = options["exp"];
+    }
+    if (options.containsKey("challenge")) {
       verifiablePresentation["nonce"] = options["challenge"];
     }
 
@@ -98,13 +104,13 @@ class InfraVerifiable {
     var jws =
         JsonWebSignature.fromCompactSerialization(verifiablePresentationJWT);
     var payload = jws.unverifiedPayload.jsonContent;
-    if (payload["nbf"] != Null && payload["nbf"] > currentTime) {
+    if (payload.containsKey("nbf") && payload["nbf"] > currentTime) {
       throw Exception('verifiable presentation not valid yet');
     }
-    if (payload["exp"] != Null && payload["exp"] < currentTime) {
+    if (payload.containsKey("exp") && payload["exp"] < currentTime) {
       throw Exception('verifiable presentation expired');
     }
-    if (options["challenge"] != Null &&
+    if (options.containsKey("challenge") &&
         options["challenge"] != payload["nonce"]) {
       throw Exception('Presentation does not contain the mandatory challenge');
     }

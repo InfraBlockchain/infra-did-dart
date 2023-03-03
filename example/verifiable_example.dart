@@ -32,6 +32,7 @@ Future<void> main() async {
 
   Map options = {
     'challenge': "this is challenge",
+    'nbf': DateTime.now().millisecondsSinceEpoch ~/ 1000
   };
 
   String vp = await InfraVerifiable().createVerifiablePresentation(
