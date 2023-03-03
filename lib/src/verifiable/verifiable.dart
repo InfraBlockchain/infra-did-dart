@@ -21,6 +21,7 @@ class InfraVerifiable {
     var builder = JsonWebSignatureBuilder();
     builder.jsonContent = credential;
     builder.addRecipient(jwk, algorithm: "ES256K");
+    builder.setProtectedHeader("typ", "JWT");
     var jws = builder.build();
 
     return jws.toCompactSerialization();
@@ -94,6 +95,7 @@ class InfraVerifiable {
     var builder = JsonWebSignatureBuilder();
     builder.jsonContent = verifiablePresentation;
     builder.addRecipient(jwk, algorithm: "ES256K");
+    builder.setProtectedHeader("typ", "JWT");
     var jws = builder.build();
     return jws.toCompactSerialization();
   }
