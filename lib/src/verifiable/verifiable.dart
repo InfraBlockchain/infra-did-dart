@@ -79,8 +79,8 @@ class InfraVerifiable {
         ["verifiableCredential"] = [verifiableCredentialJWT];
     verifiablePresentation["iss"] = holderDid;
     verifiablePresentation["aud"] = [verifierDid];
-    verifiablePresentation["nbf"] = now.millisecondsSinceEpoch;
-    verifiablePresentation["exp"] = exp.millisecondsSinceEpoch;
+    verifiablePresentation["nbf"] = now.millisecondsSinceEpoch ~/ 1000;
+    verifiablePresentation["exp"] = exp.millisecondsSinceEpoch ~/ 1000;
 
     var builder = JsonWebSignatureBuilder();
     builder.jsonContent = verifiablePresentation;
@@ -91,7 +91,7 @@ class InfraVerifiable {
 
   Future<Map> verifyVerifiablePresentation(
       String verifiablePresentationJWT, Resolver resolver) async {
-    int currentTime = DateTime.now().millisecondsSinceEpoch;
+    int currentTime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     var jws =
         JsonWebSignature.fromCompactSerialization(verifiablePresentationJWT);
     var payload = jws.unverifiedPayload.jsonContent;
