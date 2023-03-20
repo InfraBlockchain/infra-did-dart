@@ -32,14 +32,20 @@ void main() {
       Map verifiedVc =
           await InfraVerifiable().verifyVerifiableCredential(vc, resolver);
 
+      Map options = {
+        'challenge': "this is challenge",
+        'nbf': DateTime.now().millisecondsSinceEpoch ~/ 1000
+      };
+
       String vp = await InfraVerifiable().createVerifiablePresentation(
-          vc,
+          [vc],
           "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
           "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
-          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63");
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          options);
 
-      Map verifiedVp =
-          await InfraVerifiable().verifyVerifiablePresentation(vp, resolver);
+      Map verifiedVp = await InfraVerifiable()
+          .verifyVerifiablePresentation(vp, resolver, options);
       expect(true, true);
     });
   });

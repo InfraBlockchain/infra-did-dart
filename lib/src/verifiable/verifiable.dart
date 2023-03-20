@@ -61,7 +61,7 @@ class InfraVerifiable {
     return payload;
   }
 
-  String createVerifiablePresentation(String verifiableCredentialJWT,
+  String createVerifiablePresentation(List<String> verifiableCredentialJWT,
       String eosPrivateKey, String holderDid, String verifierDid, Map options) {
     IKey eosSk = stringToPrivateKey(eosPrivateKey);
     PrivateKey sk = PrivateKey.fromHex(arrayToHex(eosSk.data));
@@ -76,8 +76,8 @@ class InfraVerifiable {
     verifiablePresentation["vp"]
         ["@context"] = ["https://www.w3.org/2018/credentials/v1"];
     verifiablePresentation["vp"]["type"] = ["VerifiablePresentation"];
-    verifiablePresentation["vp"]
-        ["verifiableCredential"] = [verifiableCredentialJWT];
+    verifiablePresentation["vp"]["verifiableCredential"] =
+        verifiableCredentialJWT;
     verifiablePresentation["iss"] = holderDid;
     if (options.containsKey("aud")) {
       verifiablePresentation["aud"] = options["aud"];
