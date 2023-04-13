@@ -1,7 +1,7 @@
 import Flutter
 import UIKit
 
-public class SwiftMylibPlugin: NSObject, FlutterPlugin {
+public class SwiftInfraDidDartPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
     // We are not using Flutter channels here
   }

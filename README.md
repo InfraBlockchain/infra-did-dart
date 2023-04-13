@@ -1,216 +1,396 @@
-# Flutter Rust FFI Template
+# infra-did-dart
 
-This project is a Flutter Plugin template. 
+**This Library is dart version of infra-did-js**
 
-It provides out-of-the box support for cross-compiling native Rust code for all available iOS and Android architectures and call it from plain Dart using [Foreign Function Interface](https://en.wikipedia.org/wiki/Foreign_function_interface).
+-   Infra DID Method Spec
 
-This template provides first class FFI support, **the clean way**. 
-- No Swift/Kotlin wrappers
-- No message passing
-- No async/await on Dart
-- Write once, use everywhere
-- No garbage collection
-- Mostly automated development
-- No need to export `aar` bundles or `.framework`'s
+    -   https://github.com/InfraBlockchain/infra-did-method-specs/blob/main/docs/Infra-DID-method-spec.md
 
-## Getting started
+-   Infra DID Registry Smart Contract on InfraBlockchain
 
-### Write your native code
+    -   https://github.com/InfraBlockchain/infra-did-registry
 
-Edit your code within `rust/src/lib.rs` and add any dependencies you need.
+-   Infra DID Resolver (DIF javascript universal resolver compatible)
+    -   https://github.com/InfraBlockchain/infra-did-resolver
 
-Make sure to annotate your exported functions with `#[no_mangle]` and `pub extern` so the function names can be matched from Dart.
+Feature provided by infra-did-dart Library :
 
-Returning strings or structs may require using `unsafe` blocks. Returned strings or structs will need to be `free`'d from Dart.
+-   Infra DID Creation
+-   update DID attributes (service endpoint)
+-   update Pub-Key DID owner key
+-   revoke Pub-Key DID
+-   add/update/remove trusted Pub-Key DID & Account DID
+-   get trusted Pub-Key DID & Account DID
+-   VC/VP creation/verification
 
-### Compile the library
+## Installation
 
-- Make sure that the Android NDK is installed
-  - You might also need LLVM from the SDK manager
-- Ensure that the env variable `$ANDROID_NDK_HOME` points to the NDK base folder
-  - It may look like `/Users/brickpop/Library/Android/sdk/ndk-bundle` on MacOS
-  - And look like `/home/brickpop/dev/android/ndk-bundle` on Linux
-- On the `rust` folder:
-  - Run `make` to see the available actions
-  - Run `make init` to install the Rust targets
-  - Run `make all` to build the libraries and the `.h` file
-- Update the name of your library in `Cargo.toml`
-  - You'll need to update the symlinks to target the new file names. See iOS and Android below.
-
-Generated artifacts:
-- Android libraries
-  - `target/aarch64-linux-android/release/libinfra_did_binding.so`
-  - `target/armv7-linux-androideabi/release/libinfra_did_binding.so`
-  - `target/i686-linux-android/release/libinfra_did_binding.so`
-  - `target/x86_64-linux-android/release/libinfra_did_binding.so`
-- iOS library
-  - `target/universal/release/libinfra_did_binding.a`
-- Bindings header
-  - `target/bindings.h`
-
-### Reference the shared objects
-
-#### iOS
-
-Ensure that `ios/infra_did_dart.podspec` includes the following directives:
-
-```diff
-...
-   s.source           = { :path => '.' }
-+  s.public_header_files = 'Classes**/*.h'
-   s.source_files = 'Classes/**/*'
-+  s.static_framework = true
-+  s.vendored_libraries = "**/*.a"
-   s.dependency 'Flutter'
-   s.platform = :ios, '8.0'
-...
-```
-
-On `flutter/ios`, place a symbolic link to the `libinfra_did_binding.a` file
+-   **Using [pub](https://pub.dev)**:
 
 ```sh
-$ cd flutter/ios
-$ ln -s ../rust/target/universal/release/libinfra_did_binding.a .
+dart pub add infra_did_dart
 ```
 
-Append the generated function signatures from `rust/target/bindings.h` into `flutter/ios/Classes/InfraDidDartPlugin.h`
+### Infra DID Creation
 
-```sh 
-$ cd flutter/ios
-$ cat ../rust/target/bindings.h >> Classes/InfraDidDartPlugin.h
+currently secp256k1 curve is supported
+
+```dart
+  InfraKey a = InfraKey();
+  a.generateDid("01");
+  print(a.toJson());
+  /*
+    {
+      "privateKey": "PVT_K1_tJNUdraxcUjn2rACZSWLFbUcj3DeVjDC5ZjG8Q3yztTZZg3N7",
+      "publicKey": "PUB_K1_5JXbkkMg4o2P9Zm7ZuSkmb4zegbygvfYPMgXTxcTTyjBuDxRgs",
+      "did":
+          "did:infra:01:PUB_K1_5JXbkkMg4o2P9Zm7ZuSkmb4zegbygvfYPMgXTxcTTyjBuDxRgs"
+    };
+   */
 ```
 
-In our case, it will append `char *rust_greeting(const char *to);` and `void rust_cstr_free(char *s);`
+### Update DID attributes
 
-NOTE: By default, XCode will skip bundling the `libinfra_did_binding.a` library if it detects that it is not being used. To force its inclusion, add dummy invocations in `SwiftInfraDidDartPlugin.swift` that use every single native function that you use from Flutter:
+Set Pub-Key DID Attribute
 
-```kotlin
-...
-  public func dummyMethodToEnforceBundling() {
-    rust_greeting("...");
-    compress_jpeg_file("...");
-    compress_png_file("...");
-    // ...
-    // This code will force the bundler to use these functions, but will never be called
-  }
+```dart
+    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.setAttributePubKeyDID("key", "value");
+```
+
+Remove Pub-Key DID Attribute
+
+```dart
+    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.revokePubKeyDID();
+```
+
+Clear Pub-Key DID chain data
+
+```dart
+    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.clearPubKeyDID();
+```
+
+Set Account-based DID Attribute
+
+```dart
+    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.setAttributeAccountDID(
+          "svc/MessagingService", "https://infradid.com/pk/3/mysvcr90");
+```
+
+Update Pub-Key DID owner key
+
+```dart
+    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.changeOwnerPubKeyDID(
+          "PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63");
+```
+
+### Revoke Pub-Key DID
+
+```dart
+    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.revokePubKeyDID();
+```
+
+### Add Trusted Pub-Key DID
+
+```dart
+    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.registerTrustedAccountDID("fmapkumrotfc", "eosio", "?");
+```
+
+### Update Trusted Pub-Key DID
+
+```dart
+    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.updateTrustedAccountDID("fmapkumrotfc", "eosio", "?");
+```
+
+### Remove Trusted Pub-Key DID
+
+```dart
+    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.removeTrustedAccountDID("fmapkumrotfc", "eosio");
+```
+
+### Get Trusted Pub-Key DID By Authorizer
+
+```dart
+    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.getTrustedPubKeyDIDByAuthorizer("fmapkumrotfc");
+```
+
+### Get Trusted Pub-Key DID By Target
+
+```dart
+    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.getTrustedPubKeyDIDByTarget(
+          "PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63");
+```
+
+### Get Trusted Pub-Key DID By Authorizer and Target
+
+```dart
+    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.getTrustedPubKeyDID("fmapkumrotfc",
+          "PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63");
+```
+
+### Add Trusted Account DID
+
+```dart
+    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.registerTrustedAccountDID("fmapkumrotfc", "eosio", "?");
+```
+
+### Update Trusted Account DID
+
+```dart
+    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.updateTrustedAccountDID("fmapkumrotfc", "eosio", "?");
+```
+
+### Remove Trusted Account DID
+
+```dart
+    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.removeTrustedAccountDID("fmapkumrotfc", "eosio");
+```
+
+### Get Trusted Account DID By Authorizer
+
+```dart
+    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.getTrustedAccountDIDByAuthorizer("fmapkumrotfc");
+```
+
+### Get Trusted Account DID By Target
+
+```dart
+    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.getTrustedAccountDIDByTarget("eosio");
+```
+
+### Get Trusted Account DID By Authorizer and Target
+
+```dart
+    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.getTrustedAccountDID("fmapkumrotfc", "eosio");
+```
+
+### Issuing and Verifying W3C Verifiable Credential (VC), Verifiable Presentation (VP)
+
+#### DID Resolver
+
+```dart
+  Resolver a = Resolver("fmapkumrotfc", "01", "http://localhost:8888");
+```
+
+#### Create and Verify Verifiable Credential Jwt
+
+```dart
+  Resolver resolver = Resolver("fmapkumrotfc", "01", "http://localhost:8888");
+  Map credentials = {
+    "vc": {
+      "id":
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+      "@context": [
+        "https://www.w3.org/2018/credentials/v1",
+        "https://coov.io/docs/vc/personal"
+      ],
+      "type": ["VerifiableCredential", "Personal"],
+      "credentialSubject": {"dob": "19910405"}
+    },
+    "sub":
+        "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+    "ver": "0.9",
+    "iss":
+        "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63"
+  };
+
+  String vc = await InfraVerifiable().createVerifiableCredential(credentials,
+      "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+  print(vc + "\n");
+
+  Map verifiedVc =
+      await InfraVerifiable().verifyVerifiableCredential(vc, resolver);
+  print(verifiedVc);
+  print("");
+```
+
+Verified Credential Result
+
+```json
+{
+    "vc": {
+      "id":
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+      "@context": [
+        "https://www.w3.org/2018/credentials/v1",
+        "https://coov.io/docs/vc/personal"
+      ],
+      "type": ["VerifiableCredential", "Personal"],
+      "credentialSubject": {"dob": "19910405"}
+    },
+    "sub":
+        "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+    "ver": "0.9",
+    "iss":
+        "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63"
+  };
+```
+
+#### Create and Verify Verifiable Presentation Jwt
+
+```dart
+  String vp = await InfraVerifiable().createVerifiablePresentation(
+      vc,
+      "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+      "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+      "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63");
+  print(vp + "\n");
+
+  Map verifiedVp =
+      await InfraVerifiable().verifyVerifiablePresentation(vp, resolver);
+  print(verifiedVp);
+  print("");
+```
+
+Verified Presentation Result
+
+```json
+{
+    "vp": {
+        "@context": ["https://www.w3.org/2018/credentials/v1"],
+        "type": ["VerifiablePresentation"],
+        "verifiableCredential": [
+            "eyJhbGciOiJFUzI1NiJ9.eyJ2YyI6eyJpZCI6ImRpZDppbmZyYTowMTpQVUJfSzFfNk1SeUFqUXE4dWQ3aFZOWWNmblZQSnFjVnBzY041U284Qmh0SHVHWXFFVDVCb0RxNjMiLCJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSIsImh0dHBzOi8vY29vdi5pby9kb2NzL3ZjL3BlcnNvbmFsIl0sInR5cGUiOlsiVmVyaWZpYWJsZUNyZWRlbnRpYWwiLCJQZXJzb25hbCJdLCJjcmVkZW50aWFsU3ViamVjdCI6eyJkb2IiOiIxOTkxMDQwNSJ9fSwic3ViIjoiZGlkOmluZnJhOjAxOlBVQl9LMV82TVJ5QWpRcTh1ZDdoVk5ZY2ZuVlBKcWNWcHNjTjVTbzhCaHRIdUdZcUVUNUJvRHE2MyIsInZlciI6IjAuOSIsImlzcyI6ImRpZDppbmZyYTowMTpQVUJfSzFfNk1SeUFqUXE4dWQ3aFZOWWNmblZQSnFjVnBzY041U284Qmh0SHVHWXFFVDVCb0RxNjMifQ.mqEdDQAmNquUvRy7XjjbeW7unlsjjP7UHhFjYzVRItLoFbiM40KG_aHLqRMiF7NjX3vuAB88ukPtkAXU7PkoKA"
+        ]
+    },
+    "iss": "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+    "aud": [
+        "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63"
+    ],
+    "nbf": "1671771659477",
+    "exp": "1671807600000"
 }
 ```
 
-If you won't be using Flutter channels, the rest of methods can be left empty.
+## API Documentation
 
-> Note: Support for avmv7, armv7s and i386 is deprecated. The targets can still be compiled with Rust 1.41 or earlier and by uncommenting the `make init` line on `rust/makefile`
+For more information visit our [API reference]().
 
-#### Android
+## License
 
-Similarly as we did on iOS with `libinfra_did_binding.a`, create symlinks pointing to the binary libraries on `rust/target`.
-
-You should have the following structure on `flutter/android` for each architecture:
-
-```
-src
-└── main
-    └── jniLibs
-        ├── arm64-v8a
-        │   └── libinfra_did_binding.so@ -> ../../../../../rust/target/aarch64-linux-android/release/libinfra_did_binding.so
-        ├── armeabi-v7a
-        │   └── libinfra_did_binding.so@ -> ../../../../../rust/target/armv7-linux-androideabi/release/libinfra_did_binding.so
-        ├── x86
-        │   └── libinfra_did_binding.so@ -> ../../../../../rust/target/i686-linux-android/release/libinfra_did_binding.so
-        └── x86_64
-            └── libinfra_did_binding.so@ -> ../../../../../rust/target/x86_64-linux-android/release/libinfra_did_binding.so
-```
-
-As before, if you are not using Flutter channels, the methods within `android/src/main/kotlin/com/infrablockchain/infra_did_dart/InfraDidDartPlugin.kt` can be left empty.
-
-### Exposing a Dart API to use the bindings
-
-To invoke the native code: load the library, locate the symbols and `typedef` the Dart functions. You can automate this process from `rust/target/bindings.h` or do it manually.
-
-#### Automatic binding generation
-
-To use [ffigen](https://pub.dev/packages/ffigen), add the dependency in `pubspec.yaml`.
-
-```diff
- dev_dependencies:
-   flutter_test:
-     sdk: flutter
-+  ffigen: ^1.2.0
-```
-
-Also, add the following lines at the end of `pubspec.yaml`:
-
-```yaml
-ffigen:
-  output: lib/bindings.dart
-  headers:
-    entry-points:
-    - rust/target/bindings.h
-  name: InfraDidDartBindings
-  description: Dart bindings to call Infra DID functions
-```
-
-**On MacOS**:
-```sh
-brew install llvm
-flutter pub run ffigen:setup -I/usr/local/opt/llvm/include -L/usr/local/opt/llvm/lib
-```
-
-**On Linux**:
-```sh
-sudo apt-get install -y clang libclang-dev
-flutter pub run ffigen:setup
-```
-
-Generate `lib/bindings.dart`:
-```sh
-flutter pub run ffigen
-```
-
-Finally, use the generated `GreetingBindings` class. An example wrapper [is available here](./lib/infra_did_dart.dart).
-
-#### Manual bindings
-
-Load the library: 
-```dart
-final DynamicLibrary nativeExampleLib = Platform.isAndroid
-    ? DynamicLibrary.open("libinfra_did_binding.so")   // Load the dynamic library on Android
-    : DynamicLibrary.process();              // Load the static library on iOS
-```
-
-Find the symbols we want to use, with the appropriate Dart signatures:
-```dart
-final Pointer<Utf8> Function(Pointer<Utf8>) rustGreeting = nativeExampleLib
-    .lookup<NativeFunction<Pointer<Utf8> Function(Pointer<Utf8>)>>("rust_greeting")
-    .asFunction();
-
-final void Function(Pointer<Utf8>) freeGreeting = nativeExampleLib
-    .lookup<NativeFunction<Void Function(Pointer<Utf8>)>>("rust_cstr_free")
-    .asFunction();
-```
-
-Call them:
-```dart
-// Prepare the parameters
-final name = "John Smith";
-final Pointer<Utf8> namePtr = Utf8.toUtf8(name);
-print("- Calling rust_greeting with argument:  $namePtr");
-
-// Call rust_greeting
-final Pointer<Utf8> resultPtr = rustGreeting(namePtr);
-print("- Result pointer:  $resultPtr");
-
-final String greetingStr = Utf8.fromUtf8(resultPtr);
-print("- Response string:  $greetingStr");
-```
-
-When we are done using `greetingStr`, tell Rust to free it, since the Rust implementation kept it alive for us to use it.
-```dart
-freeGreeting(resultPtr);
-```
-
-## More information
-- https://dart.dev/guides/libraries/c-interop
-- https://flutter.dev/docs/development/platform-integration/c-interop
-- https://github.com/dart-lang/samples/blob/master/ffi/structs/structs.dart
-- https://mozilla.github.io/firefox-browser-architecture/experiments/2017-09-06-rust-on-ios.html
-- https://mozilla.github.io/firefox-browser-architecture/experiments/2017-09-21-rust-on-android.html
+**Infra-DID-Dart** is under MIT license. See the [LICENSE](https://github.com/InfraBlockchain/infra-did-dart/blob/master/LICENSE) file for more info.

@@ -8,11 +8,11 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
 
-/** MylibPlugin */
-public class MylibPlugin: FlutterPlugin, MethodCallHandler {
+/** InfraDidDartPlugin */
+public class InfraDidDartPlugin: FlutterPlugin, MethodCallHandler {
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    // val channel = MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "mylib")
-    // channel.setMethodCallHandler(MylibPlugin());
+    // val channel = MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "infra_did_dart")
+    // channel.setMethodCallHandler(InfraDidDartPlugin());
   }
 
   // This static function is optional and equivalent to onAttachedToEngine. It supports the old
@@ -27,8 +27,8 @@ public class MylibPlugin: FlutterPlugin, MethodCallHandler {
   companion object {
     @JvmStatic
     fun registerWith(registrar: Registrar) {
-      // val channel = MethodChannel(registrar.messenger(), "mylib")
-      // channel.setMethodCallHandler(MylibPlugin())
+      // val channel = MethodChannel(registrar.messenger(), "infra_did_dart")
+      // channel.setMethodCallHandler(InfraDidDartPlugin())
     }
   }
 
