@@ -41,7 +41,7 @@ init:
 # ##############################################################################
 
 ## all: Compile iOS, Android and bindings targets
-all: ios macos android bindings
+all: ios ios-sim macos android bindings
 
 ## ios: Compile the iOS universal library
 ios: target/universal/release/libinfra_did_binding.a
@@ -49,6 +49,15 @@ ios: target/universal/release/libinfra_did_binding.a
 target/universal/release/libinfra_did_binding.a: $(SOURCES) ndk-home
 	@if [ $$(uname) == "Darwin" ] ; then \
 		cargo lipo --release ; \
+		else echo "Skipping iOS compilation on $$(uname)" ; \
+	fi
+	@echo "[DONE] $@"
+
+ios-sim: target/aarch64-apple-ios-sim/release/libinfra_did_binding.a
+
+target/aarch64-apple-ios-sim/release/libinfra_did_binding.a: $(SOURCES) ndk-home
+	@if [ $$(uname) == "Darwin" ] ; then \
+		cargo build --target aarch64-apple-ios-sim --release ; \
 		else echo "Skipping iOS compilation on $$(uname)" ; \
 	fi
 	@echo "[DONE] $@"
@@ -77,24 +86,28 @@ target/aarch64-linux-android/release/libinfra_did_binding.so: $(SOURCES) ndk-hom
 	CC_aarch64_linux_android=$(ANDROID_AARCH64_LINKER) \
 	CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER=$(ANDROID_AARCH64_LINKER) \
 		cargo build --target aarch64-linux-android --release
+	cp target/aarch64-linux-android/release/libinfra_did_binding.so ../android/src/main/jniLibs/arm64-v8a/libinfra_did_binding.so
 	@echo "[DONE] $@"
 
 target/armv7-linux-androideabi/release/libinfra_did_binding.so: $(SOURCES) ndk-home
 	CC_armv7_linux_androideabi=$(ANDROID_ARMV7_LINKER) \
 	CARGO_TARGET_ARMV7_LINUX_ANDROIDEABI_LINKER=$(ANDROID_ARMV7_LINKER) \
 		cargo build --target armv7-linux-androideabi --release
+	cp target/armv7-linux-androideabi/release/libinfra_did_binding.so ../android/src/main/jniLibs/armeabi-v7a/libinfra_did_binding.so
 	@echo "[DONE] $@"
 
 target/i686-linux-android/release/libinfra_did_binding.so: $(SOURCES) ndk-home
 	CC_i686_linux_android=$(ANDROID_I686_LINKER) \
 	CARGO_TARGET_I686_LINUX_ANDROID_LINKER=$(ANDROID_I686_LINKER) \
 		cargo  build --target i686-linux-android --release
+	cp target/i686-linux-android/release/libinfra_did_binding.so ../android/src/main/jniLibs/x86/libinfra_did_binding.so
 	@echo "[DONE] $@"
 
 target/x86_64-linux-android/release/libinfra_did_binding.so: $(SOURCES) ndk-home
 	CC_x86_64_linux_android=$(ANDROID_X86_64_LINKER) \
 	CARGO_TARGET_X86_64_LINUX_ANDROID_LINKER=$(ANDROID_X86_64_LINKER) \
 		cargo build --target x86_64-linux-android --release
+	cp target/x86_64-linux-android/release/libinfra_did_binding.so ../android/src/main/jniLibs/x86_64/libinfra_did_binding.so
 	@echo "[DONE] $@"
 		
 .PHONY: ndk-home
@@ -110,8 +123,6 @@ bindings: target/bindings.h
 target/bindings.h: $(SOURCES)
 	cbindgen ./src/lib.rs -c cbindgen.toml | grep -v \#include | uniq > $@
 	@echo "[DONE] $@"
-
-## :
 
 # ##############################################################################
 # # OTHER
