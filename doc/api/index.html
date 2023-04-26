@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="generator" content="made with love by dartdoc 6.1.5">
+  <meta name="description" content="infra_did_dart API docs, for the Dart programming language.">
+  <title>infra_did_dart - Dart API docs</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="static-assets/github.css?v1">
+  <link rel="stylesheet" href="static-assets/styles.css?v1">
+  <link rel="icon" href="static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="" data-using-base-href="false" class="light-theme">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="https://github.com/InfraBlockchain/infra-did-dart">infra_did_dart package</a></li>
+  </ol>
+  <div class="self-name">infra_did_dart</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span class="material-symbols-outlined">
+        brightness_4
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+
+  <div id="dartdoc-main-content" class="main-content">
+      
+<section class="desc markdown">
+  <h1 id="infra-did-dart">infra-did-dart</h1>
+<p><strong>This Library is dart version of infra-did-js</strong></p>
+<ul>
+<li>
+<p>Infra DID Method Spec</p>
+<ul>
+<li><a href="https://github.com/InfraBlockchain/infra-did-method-specs/blob/main/docs/Infra-DID-method-spec.md">https://github.com/InfraBlockchain/infra-did-method-specs/blob/main/docs/Infra-DID-method-spec.md</a></li>
+</ul>
+</li>
+<li>
+<p>Infra DID Registry Smart Contract on InfraBlockchain</p>
+<ul>
+<li><a href="https://github.com/InfraBlockchain/infra-did-registry">https://github.com/InfraBlockchain/infra-did-registry</a></li>
+</ul>
+</li>
+<li>
+<p>Infra DID Resolver (DIF javascript universal resolver compatible)</p>
+<ul>
+<li><a href="https://github.com/InfraBlockchain/infra-did-resolver">https://github.com/InfraBlockchain/infra-did-resolver</a></li>
+</ul>
+</li>
+</ul>
+<p>Feature provided by infra-did-dart Library :</p>
+<ul>
+<li>Infra DID Creation</li>
+<li>update DID attributes (service endpoint)</li>
+<li>update Pub-Key DID owner key</li>
+<li>revoke Pub-Key DID</li>
+<li>add/update/remove trusted Pub-Key DID &amp; Account DID</li>
+<li>get trusted Pub-Key DID &amp; Account DID</li>
+<li>VC/VP creation/verification</li>
+</ul>
+<h2 id="installation">Installation</h2>
+<ul>
+<li><strong>Using <a href="https://pub.dev">pub</a></strong>:</li>
+</ul>
+<pre class="language-sh"><code class="language-sh">dart pub add infra_did_dart
+</code></pre>
+<h3 id="infra-did-creation">Infra DID Creation</h3>
+<p>currently secp256k1 curve is supported</p>
+<pre class="language-dart"><code class="language-dart">  InfraKey a = InfraKey();
+  a.generateDid("01");
+  print(a.toJson());
+  /*
+    {
+      "privateKey": "PVT_K1_tJNUdraxcUjn2rACZSWLFbUcj3DeVjDC5ZjG8Q3yztTZZg3N7",
+      "publicKey": "PUB_K1_5JXbkkMg4o2P9Zm7ZuSkmb4zegbygvfYPMgXTxcTTyjBuDxRgs",
+      "did":
+          "did:infra:01:PUB_K1_5JXbkkMg4o2P9Zm7ZuSkmb4zegbygvfYPMgXTxcTTyjBuDxRgs"
+    };
+   */
+</code></pre>
+<h3 id="update-did-attributes">Update DID attributes</h3>
+<p>Set Pub-Key DID Attribute</p>
+<pre class="language-dart"><code class="language-dart">    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.setAttributePubKeyDID("key", "value");
+</code></pre>
+<p>Remove Pub-Key DID Attribute</p>
+<pre class="language-dart"><code class="language-dart">    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.revokePubKeyDID();
+</code></pre>
+<p>Clear Pub-Key DID chain data</p>
+<pre class="language-dart"><code class="language-dart">    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.clearPubKeyDID();
+</code></pre>
+<p>Set Account-based DID Attribute</p>
+<pre class="language-dart"><code class="language-dart">    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.setAttributeAccountDID(
+          "svc/MessagingService", "https://infradid.com/pk/3/mysvcr90");
+</code></pre>
+<p>Update Pub-Key DID owner key</p>
+<pre class="language-dart"><code class="language-dart">    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.changeOwnerPubKeyDID(
+          "PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63");
+</code></pre>
+<h3 id="revoke-pub-key-did">Revoke Pub-Key DID</h3>
+<pre class="language-dart"><code class="language-dart">    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.revokePubKeyDID();
+</code></pre>
+<h3 id="add-trusted-pub-key-did">Add Trusted Pub-Key DID</h3>
+<pre class="language-dart"><code class="language-dart">    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.registerTrustedAccountDID("fmapkumrotfc", "eosio", "?");
+</code></pre>
+<h3 id="update-trusted-pub-key-did">Update Trusted Pub-Key DID</h3>
+<pre class="language-dart"><code class="language-dart">    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.updateTrustedAccountDID("fmapkumrotfc", "eosio", "?");
+</code></pre>
+<h3 id="remove-trusted-pub-key-did">Remove Trusted Pub-Key DID</h3>
+<pre class="language-dart"><code class="language-dart">    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.removeTrustedAccountDID("fmapkumrotfc", "eosio");
+</code></pre>
+<h3 id="get-trusted-pub-key-did-by-authorizer">Get Trusted Pub-Key DID By Authorizer</h3>
+<pre class="language-dart"><code class="language-dart">    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.getTrustedPubKeyDIDByAuthorizer("fmapkumrotfc");
+</code></pre>
+<h3 id="get-trusted-pub-key-did-by-target">Get Trusted Pub-Key DID By Target</h3>
+<pre class="language-dart"><code class="language-dart">    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.getTrustedPubKeyDIDByTarget(
+          "PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63");
+</code></pre>
+<h3 id="get-trusted-pub-key-did-by-authorizer-and-target">Get Trusted Pub-Key DID By Authorizer and Target</h3>
+<pre class="language-dart"><code class="language-dart">    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.getTrustedPubKeyDID("fmapkumrotfc",
+          "PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63");
+</code></pre>
+<h3 id="add-trusted-account-did">Add Trusted Account DID</h3>
+<pre class="language-dart"><code class="language-dart">    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.registerTrustedAccountDID("fmapkumrotfc", "eosio", "?");
+</code></pre>
+<h3 id="update-trusted-account-did">Update Trusted Account DID</h3>
+<pre class="language-dart"><code class="language-dart">    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.updateTrustedAccountDID("fmapkumrotfc", "eosio", "?");
+</code></pre>
+<h3 id="remove-trusted-account-did">Remove Trusted Account DID</h3>
+<pre class="language-dart"><code class="language-dart">    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.removeTrustedAccountDID("fmapkumrotfc", "eosio");
+</code></pre>
+<h3 id="get-trusted-account-did-by-authorizer">Get Trusted Account DID By Authorizer</h3>
+<pre class="language-dart"><code class="language-dart">    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.getTrustedAccountDIDByAuthorizer("fmapkumrotfc");
+</code></pre>
+<h3 id="get-trusted-account-did-by-target">Get Trusted Account DID By Target</h3>
+<pre class="language-dart"><code class="language-dart">    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.getTrustedAccountDIDByTarget("eosio");
+</code></pre>
+<h3 id="get-trusted-account-did-by-authorizer-and-target">Get Trusted Account DID By Authorizer and Target</h3>
+<pre class="language-dart"><code class="language-dart">    var infra = InfraDID(
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+          "fmapkumrotfc",
+          "http://localhost:8888",
+          "fmapkumrotfc",
+          "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+    await infra.getTrustedAccountDID("fmapkumrotfc", "eosio");
+</code></pre>
+<h3 id="issuing-and-verifying-w3c-verifiable-credential-vc-verifiable-presentation-vp">Issuing and Verifying W3C Verifiable Credential (VC), Verifiable Presentation (VP)</h3>
+<h4 id="did-resolver">DID Resolver</h4>
+<pre class="language-dart"><code class="language-dart">  Resolver a = Resolver("fmapkumrotfc", "01", "http://localhost:8888");
+</code></pre>
+<h4 id="create-and-verify-verifiable-credential-jwt">Create and Verify Verifiable Credential Jwt</h4>
+<pre class="language-dart"><code class="language-dart">  Resolver resolver = Resolver("fmapkumrotfc", "01", "http://localhost:8888");
+  Map credentials = {
+    "vc": {
+      "id":
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+      "@context": [
+        "https://www.w3.org/2018/credentials/v1",
+        "https://coov.io/docs/vc/personal"
+      ],
+      "type": ["VerifiableCredential", "Personal"],
+      "credentialSubject": {"dob": "19910405"}
+    },
+    "sub":
+        "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+    "ver": "0.9",
+    "iss":
+        "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63"
+  };
+
+  String vc = await InfraVerifiable().createVerifiableCredential(credentials,
+      "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V");
+  print(vc + "\n");
+
+  Map verifiedVc =
+      await InfraVerifiable().verifyVerifiableCredential(vc, resolver);
+  print(verifiedVc);
+  print("");
+</code></pre>
+<p>Verified Credential Result</p>
+<pre class="language-json"><code class="language-json">{
+    "vc": {
+      "id":
+          "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+      "@context": [
+        "https://www.w3.org/2018/credentials/v1",
+        "https://coov.io/docs/vc/personal"
+      ],
+      "type": ["VerifiableCredential", "Personal"],
+      "credentialSubject": {"dob": "19910405"}
+    },
+    "sub":
+        "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+    "ver": "0.9",
+    "iss":
+        "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63"
+  };
+</code></pre>
+<h4 id="create-and-verify-verifiable-presentation-jwt">Create and Verify Verifiable Presentation Jwt</h4>
+<pre class="language-dart"><code class="language-dart">  String vp = await InfraVerifiable().createVerifiablePresentation(
+      vc,
+      "PVT_K1_2bfGi9rYsXQSXXTvJbDAPhHLQUojjaNLomdm3cEJ1XTzMqUt3V",
+      "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+      "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63");
+  print(vp + "\n");
+
+  Map verifiedVp =
+      await InfraVerifiable().verifyVerifiablePresentation(vp, resolver);
+  print(verifiedVp);
+  print("");
+</code></pre>
+<p>Verified Presentation Result</p>
+<pre class="language-json"><code class="language-json">{
+    "vp": {
+        "@context": ["https://www.w3.org/2018/credentials/v1"],
+        "type": ["VerifiablePresentation"],
+        "verifiableCredential": [
+            "eyJhbGciOiJFUzI1NiJ9.eyJ2YyI6eyJpZCI6ImRpZDppbmZyYTowMTpQVUJfSzFfNk1SeUFqUXE4dWQ3aFZOWWNmblZQSnFjVnBzY041U284Qmh0SHVHWXFFVDVCb0RxNjMiLCJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSIsImh0dHBzOi8vY29vdi5pby9kb2NzL3ZjL3BlcnNvbmFsIl0sInR5cGUiOlsiVmVyaWZpYWJsZUNyZWRlbnRpYWwiLCJQZXJzb25hbCJdLCJjcmVkZW50aWFsU3ViamVjdCI6eyJkb2IiOiIxOTkxMDQwNSJ9fSwic3ViIjoiZGlkOmluZnJhOjAxOlBVQl9LMV82TVJ5QWpRcTh1ZDdoVk5ZY2ZuVlBKcWNWcHNjTjVTbzhCaHRIdUdZcUVUNUJvRHE2MyIsInZlciI6IjAuOSIsImlzcyI6ImRpZDppbmZyYTowMTpQVUJfSzFfNk1SeUFqUXE4dWQ3aFZOWWNmblZQSnFjVnBzY041U284Qmh0SHVHWXFFVDVCb0RxNjMifQ.mqEdDQAmNquUvRy7XjjbeW7unlsjjP7UHhFjYzVRItLoFbiM40KG_aHLqRMiF7NjX3vuAB88ukPtkAXU7PkoKA"
+        ]
+    },
+    "iss": "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
+    "aud": [
+        "did:infra:01:PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63"
+    ],
+    "nbf": "1671771659477",
+    "exp": "1671807600000"
+}
+</code></pre>
+<h2 id="api-documentation">API Documentation</h2>
+<p>For more information visit our <a href="">API reference</a>.</p>
+<h2 id="license">License</h2>
+<p><strong>Infra-DID-Dart</strong> is under MIT license. See the <a href="https://github.com/InfraBlockchain/infra-did-dart/blob/master/LICENSE">LICENSE</a> file for more info.</p>
+</section>
+
+
+      <section class="summary">
+          <h2>Libraries</h2>
+        <dl>
+          <dt id="infra_did_dart">
+  <span class="name"><a href="infra_did_dart/infra_did_dart-library.html">infra_did_dart</a></span> 
+
+</dt>
+<dd>Support for doing something awesome.
+</dd>
+
+        </dl>
+      </section>
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="https://github.com/InfraBlockchain/infra-did-dart">infra_did_dart package</a></li>
+</ol>
+
+
+    <h5 class="hidden-xs"><span class="package-name">infra_did_dart</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="infra_did_dart/infra_did_dart-library.html">infra_did_dart</a></li>
+</ol>
+
+  </div>
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div>
+
+</main>
+
+<footer>
+  <span class="no-break">
+    infra_did_dart
+      1.0.0
+  </span>
+
+  
+</footer>
+
+
+
+<script src="static-assets/highlight.pack.js?v1"></script>
+<script src="static-assets/docs.dart.js"></script>
+
+
+
+</body>
+
+</html>
+
