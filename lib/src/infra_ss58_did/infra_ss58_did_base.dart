@@ -22,32 +22,13 @@ class InfraSS58DID {
             : DynamicLibrary.process();
   }
 
-  /// Computes a greeting for the given name using the native function
-  static String randomPhrase(int digits) {
+  static String generateSS58DID(String networkId) {
     if (_bindings == null) return "ERROR: The library is not initialized 🙁";
 
-    // Native call
-    final ptrResult = _bindings.random_phrase(digits);
-
-    // Cast the result pointer to a Dart string
-    final result = ptrResult.cast<Utf8>().toDartString();
-
-    // Clone the given result, so that the original string can be freed
-    final resultCopy = "" + result;
-
-    // Free the native value
-    InfraSS58DID._free(result);
-
-    return resultCopy;
-  }
-
-  static String substrateAddress(String seed, int prefix) {
-    if (_bindings == null) return "ERROR: The library is not initialized 🙁";
-
-    final seedPtr = seed.toNativeUtf8().cast<Utf8>();
+    final networkIdPtr = networkId.toNativeUtf8().cast<Utf8>();
 
     // Native call
-    final ptrResult = _bindings.substrate_address(seedPtr, prefix);
+    final ptrResult = _bindings.generate_ss58_did(networkIdPtr);
 
     // Cast the result pointer to a Dart string
     final result = ptrResult.cast<Utf8>().toDartString();
@@ -61,13 +42,15 @@ class InfraSS58DID {
     return result;
   }
 
-  static String generateSS58DID(String networkId) {
+  static String generateSS58DIDFromPhrase(String suri, String networkId) {
     if (_bindings == null) return "ERROR: The library is not initialized 🙁";
 
+    final suriPtr = suri.toNativeUtf8().cast<Utf8>();
     final networkIdPtr = networkId.toNativeUtf8().cast<Utf8>();
 
     // Native call
-    final ptrResult = _bindings.generate_ss58_did(networkIdPtr);
+    final ptrResult =
+        _bindings.generate_ss58_did_from_phrase(suriPtr, networkIdPtr);
 
     // Cast the result pointer to a Dart string
     final result = ptrResult.cast<Utf8>().toDartString();
@@ -109,6 +92,114 @@ class InfraSS58DID {
 
     // Native call
     final ptrResult = _bindings.ss58_address_to_did(addressPtr, networkIdPtr);
+
+    // Cast the result pointer to a Dart string
+    final result = ptrResult.cast<Utf8>().toDartString();
+
+    // Clone the given result, so that the original string can be freed
+    final resultCopy = "" + result;
+
+    // Free the native value
+    InfraSS58DID._free(result);
+
+    return result;
+  }
+
+  static String resolve(String did) {
+    if (_bindings == null) return "ERROR: The library is not initialized 🙁";
+
+    final didPtr = did.toNativeUtf8().cast<Utf8>();
+
+    // Native call
+    final ptrResult = _bindings.resolve(didPtr);
+
+    // Cast the result pointer to a Dart string
+    final result = ptrResult.cast<Utf8>().toDartString();
+
+    // Clone the given result, so that the original string can be freed
+    final resultCopy = "" + result;
+
+    // Free the native value
+    InfraSS58DID._free(result);
+
+    return result;
+  }
+
+  static String issueCredential(
+      String did, String credentialJson, String hexPrivateKey) {
+    if (_bindings == null) return "ERROR: The library is not initialized 🙁";
+
+    final didPtr = did.toNativeUtf8().cast<Utf8>();
+    final credentialJsonPtr = credentialJson.toNativeUtf8().cast<Utf8>();
+    final hexPrivateKeyPtr = hexPrivateKey.toNativeUtf8().cast<Utf8>();
+
+    // Native call
+    final ptrResult =
+        _bindings.issue_credential(didPtr, credentialJsonPtr, hexPrivateKeyPtr);
+
+    // Cast the result pointer to a Dart string
+    final result = ptrResult.cast<Utf8>().toDartString();
+
+    // Clone the given result, so that the original string can be freed
+    final resultCopy = "" + result;
+
+    // Free the native value
+    InfraSS58DID._free(result);
+
+    return result;
+  }
+
+  static String verifyCredential(String credentialJson) {
+    if (_bindings == null) return "ERROR: The library is not initialized 🙁";
+
+    final credentialJsonPtr = credentialJson.toNativeUtf8().cast<Utf8>();
+
+    // Native call
+    final ptrResult = _bindings.verify_credential(credentialJsonPtr);
+
+    // Cast the result pointer to a Dart string
+    final result = ptrResult.cast<Utf8>().toDartString();
+
+    // Clone the given result, so that the original string can be freed
+    final resultCopy = "" + result;
+
+    // Free the native value
+    InfraSS58DID._free(result);
+
+    return result;
+  }
+
+  static String issuePresentation(
+      String did, String credentialJson, String hexPrivateKey) {
+    if (_bindings == null) return "ERROR: The library is not initialized 🙁";
+
+    final didPtr = did.toNativeUtf8().cast<Utf8>();
+    final credentialJsonPtr = credentialJson.toNativeUtf8().cast<Utf8>();
+    final hexPrivateKeyPtr = hexPrivateKey.toNativeUtf8().cast<Utf8>();
+
+    // Native call
+    final ptrResult = _bindings.issue_presentation(
+        didPtr, credentialJsonPtr, hexPrivateKeyPtr);
+
+    // Cast the result pointer to a Dart string
+    final result = ptrResult.cast<Utf8>().toDartString();
+
+    // Clone the given result, so that the original string can be freed
+    final resultCopy = "" + result;
+
+    // Free the native value
+    InfraSS58DID._free(result);
+
+    return result;
+  }
+
+  static String verifyPresentation(String presentationJson) {
+    if (_bindings == null) return "ERROR: The library is not initialized 🙁";
+
+    final presentationJsonPtr = presentationJson.toNativeUtf8().cast<Utf8>();
+
+    // Native call
+    final ptrResult = _bindings.verify_presentation(presentationJsonPtr);
 
     // Cast the result pointer to a Dart string
     final result = ptrResult.cast<Utf8>().toDartString();

@@ -13,6 +13,6 @@ public class SwiftInfraDidDartPlugin: NSObject, FlutterPlugin {
 
   public func dummyMethodToEnforceBundling() {
     // dummy calls to prevent tree shaking
-    random_phrase(12)
+    resolve("did:infra:space:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW")
   }
 }
