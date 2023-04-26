@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the clearPubKeyDID method from the InfraDID class, for the Dart programming language.">
+  <title>clearPubKeyDID method - InfraDID class - infra_did_dart library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">infra_did_dart</a></li>
+    <li><a href="../../infra_did_dart/infra_did_dart-library.html">infra_did_dart</a></li>
+    <li><a href="../../infra_did_dart/InfraDID-class.html">InfraDID</a></li>
+    <li class="self-crumb">clearPubKeyDID method</li>
+  </ol>
+  <div class="self-name">clearPubKeyDID</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span class="material-symbols-outlined">
+        brightness_4
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+
+  <div id="dartdoc-main-content" class="main-content">
+      <div>
+<h1><span class="kind-method">clearPubKeyDID</span> method 
+    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a></span>
+<span class="name ">clearPubKeyDID</span>(<wbr>)
+
+      
+
+    </section>
+    
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">Future clearPubKeyDID() async {
+  int nonce = await getNonceForPubKeyDid();
+  Uint8List digest = _digestForPubKeyDIDClearSig(didPubKey, nonce);
+
+  EOSSignature signature = didOwnerPrivateKeyObj.sign(digest);
+
+  List&lt;Authorization&gt; auth = [
+    Authorization()
+      ..actor = txfeePayerAccount
+      ..permission = &#39;active&#39;
+  ];
+
+  Map data = {&#39;pk&#39;: didPubKey, &#39;sig&#39;: signature.toString()};
+
+  List&lt;Action&gt; actions = [
+    Action()
+      ..account = registryContract
+      ..name = &#39;pkdidclear&#39;
+      ..authorization = auth
+      ..data = data
+  ];
+  Transaction transaction = Transaction()..actions = actions;
+
+  return jsonRpc.pushTransaction(transaction, broadcast: true);
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="../../index.html">infra_did_dart</a></li>
+  <li><a href="../../infra_did_dart/infra_did_dart-library.html">infra_did_dart</a></li>
+  <li><a href="../../infra_did_dart/InfraDID-class.html">InfraDID</a></li>
+  <li class="self-crumb">clearPubKeyDID method</li>
+</ol>
+
+
+    <h5>InfraDID class</h5>
+    <ol>
+
+        <li class="section-title"><a href="../../infra_did_dart/InfraDID-class.html#constructors">Constructors</a></li>
+          <li><a href="../../infra_did_dart/InfraDID/InfraDID.html">InfraDID</a></li>
+
+
+        <li class="section-title">
+          <a href="../../infra_did_dart/InfraDID-class.html#instance-properties">Properties</a>
+        </li>
+          <li><a href="../../infra_did_dart/InfraDID/defaultPubKeyDidSignDataPrefix.html">defaultPubKeyDidSignDataPrefix</a></li>
+          <li><a href="../../infra_did_dart/InfraDID/did.html">did</a></li>
+          <li><a href="../../infra_did_dart/InfraDID/didAccount.html">didAccount</a></li>
+          <li><a href="../../infra_did_dart/InfraDID/didOwnerPrivateKeyObj.html">didOwnerPrivateKeyObj</a></li>
+          <li><a href="../../infra_did_dart/InfraDID/didPubKey.html">didPubKey</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
+          <li><a href="../../infra_did_dart/InfraDID/jsonRpc.html">jsonRpc</a></li>
+          <li><a href="../../infra_did_dart/InfraDID/registryContract.html">registryContract</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
+          <li><a href="../../infra_did_dart/InfraDID/sigProviderPrivKeys.html">sigProviderPrivKeys</a></li>
+          <li><a href="../../infra_did_dart/InfraDID/txfeePayerAccount.html">txfeePayerAccount</a></li>
+
+        <li class="section-title"><a href="../../infra_did_dart/InfraDID-class.html#instance-methods">Methods</a></li>
+          <li><a href="../../infra_did_dart/InfraDID/changeOwnerPubKeyDID.html">changeOwnerPubKeyDID</a></li>
+          <li><a href="../../infra_did_dart/InfraDID/clearPubKeyDID.html">clearPubKeyDID</a></li>
+          <li><a href="../../infra_did_dart/InfraDID/getNonceForPubKeyDid.html">getNonceForPubKeyDid</a></li>
+          <li><a href="../../infra_did_dart/InfraDID/getTrustedAccountDID.html">getTrustedAccountDID</a></li>
+          <li><a href="../../infra_did_dart/InfraDID/getTrustedAccountDIDByAuthorizer.html">getTrustedAccountDIDByAuthorizer</a></li>
+          <li><a href="../../infra_did_dart/InfraDID/getTrustedAccountDIDByTarget.html">getTrustedAccountDIDByTarget</a></li>
+          <li><a href="../../infra_did_dart/InfraDID/getTrustedPubKeyDID.html">getTrustedPubKeyDID</a></li>
+          <li><a href="../../infra_did_dart/InfraDID/getTrustedPubKeyDIDByAuthorizer.html">getTrustedPubKeyDIDByAuthorizer</a></li>
+          <li><a href="../../infra_did_dart/InfraDID/getTrustedPubKeyDIDByTarget.html">getTrustedPubKeyDIDByTarget</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+          <li><a href="../../infra_did_dart/InfraDID/registerTrustedAccountDID.html">registerTrustedAccountDID</a></li>
+          <li><a href="../../infra_did_dart/InfraDID/registerTrustedPubKeyDID.html">registerTrustedPubKeyDID</a></li>
+          <li><a href="../../infra_did_dart/InfraDID/removeTrustedAccountDID.html">removeTrustedAccountDID</a></li>
+          <li><a href="../../infra_did_dart/InfraDID/removeTrustedPubKeyDID.html">removeTrustedPubKeyDID</a></li>
+          <li><a href="../../infra_did_dart/InfraDID/revokePubKeyDID.html">revokePubKeyDID</a></li>
+          <li><a href="../../infra_did_dart/InfraDID/setAttributeAccountDID.html">setAttributeAccountDID</a></li>
+          <li><a href="../../infra_did_dart/InfraDID/setAttributePubKeyDID.html">setAttributePubKeyDID</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
+          <li><a href="../../infra_did_dart/InfraDID/updateTrustedAccountDID.html">updateTrustedAccountDID</a></li>
+          <li><a href="../../infra_did_dart/InfraDID/updateTrustedPubKeyDID.html">updateTrustedPubKeyDID</a></li>
+
+        <li class="section-title inherited"><a href="../../infra_did_dart/InfraDID-class.html#operators">Operators</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
+
+
+
+
+</ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    infra_did_dart
+      1.0.0
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+
+
+</body>
+
+</html>
+
