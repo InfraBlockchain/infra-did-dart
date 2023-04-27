@@ -30,3 +30,17 @@ const char *infra_issue_presentation(const char *did,
 const char *infra_verify_presentation(const char *presentation_json);
 
 void rust_cstr_free(char *s);
+
+/**
+ * Retrieve a human-readable description of the most recent error encountered by a InfraDID C
+ * function. The returned string is valid until the next call to a InfraDID function in the current
+ * thread, and should not be mutated or freed. If there has not been any error, `NULL` is returned.
+ */
+const char *infra_error_message(void);
+
+/**
+ * Retrieve a numeric code for the most recent error encountered by a InfraDID C function. If there
+ * has not been an error, 0 is returned.
+ */
+int infra_error_code(void);
+
