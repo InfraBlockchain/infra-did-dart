@@ -52,7 +52,7 @@ class InfraSS58DIDBindings {
       Pointer<Utf8> address, Pointer<Utf8> network_id) {
     _ss58_address_to_did ??=
         _dylib.lookupFunction<SS58AddressToDIDNative, SS58AddressToDID>(
-            'ss58_address_to_did');
+            'infra_ss58_address_to_did');
     return _ss58_address_to_did!(address, network_id);
   }
 
@@ -61,7 +61,7 @@ class InfraSS58DIDBindings {
 
   // ignore: non_constant_identifier_names
   Pointer<Utf8> resolve(Pointer<Utf8> did) {
-    _resolve ??= _dylib.lookupFunction<ResolveNative, Resolve>('resolve');
+    _resolve ??= _dylib.lookupFunction<ResolveNative, Resolve>('infra_resolve');
     return _resolve!(did);
   }
 
@@ -73,7 +73,7 @@ class InfraSS58DIDBindings {
       Pointer<Utf8> credential_json, Pointer<Utf8> hex_private_key) {
     _issue_credential ??=
         _dylib.lookupFunction<IssueCredentialNative, IssueCredential>(
-            'issue_credential');
+            'infra_issue_credential');
     return _issue_credential!(did, credential_json, hex_private_key);
   }
 
@@ -84,7 +84,7 @@ class InfraSS58DIDBindings {
   Pointer<Utf8> verify_credential(Pointer<Utf8> credential_json) {
     _verify_credential ??=
         _dylib.lookupFunction<VerifyCredentialNative, VerifyCredential>(
-            'verify_credential');
+            'infra_verify_credential');
     return _verify_credential!(credential_json);
   }
 
@@ -96,7 +96,7 @@ class InfraSS58DIDBindings {
       Pointer<Utf8> credential_json, Pointer<Utf8> hex_private_key) {
     _issue_presentation ??=
         _dylib.lookupFunction<IssuePresentationNative, IssuePresentation>(
-            'issue_presentation');
+            'infra_issue_presentation');
     return _issue_presentation!(did, credential_json, hex_private_key);
   }
 
@@ -107,7 +107,7 @@ class InfraSS58DIDBindings {
   Pointer<Utf8> verify_presentation(Pointer<Utf8> presentation_json) {
     _verify_presentation ??=
         _dylib.lookupFunction<VerifyPresentationNative, VerifyPresentation>(
-            'verify_presentation');
+            'infra_verify_presentation');
     return _verify_presentation!(presentation_json);
   }
 
