@@ -127,6 +127,27 @@ class InfraSS58DIDBindings {
 
   // ignore: non_constant_identifier_names
   FreeString? _rust_cstr_free;
+
+  // ignore: non_constant_identifier_names
+  get_error_message() {
+    _get_error_message ??=
+        _dylib.lookupFunction<ErrorMessageNative, ErrorMessage>(
+            'infra_error_message');
+    return _get_error_message!();
+  }
+
+  // ignore: non_constant_identifier_names
+  ErrorMessage? _get_error_message;
+
+  // ignore: non_constant_identifier_names
+  get_error_code() {
+    _get_error_code ??=
+        _dylib.lookupFunction<ErrorCodeNative, ErrorCode>('infra_error_code');
+    return _get_error_code!();
+  }
+
+  // ignore: non_constant_identifier_names
+  ErrorCode? _get_error_code;
 }
 
 typedef GenerateSS58DID = Pointer<Utf8> Function(Pointer<Utf8>);
@@ -165,3 +186,9 @@ typedef VerifyPresentationNative = Pointer<Utf8> Function(Pointer<Utf8>);
 
 typedef FreeString = void Function(Pointer<Utf8>);
 typedef FreeStringNative = Void Function(Pointer<Utf8>);
+
+typedef ErrorMessage = void Function();
+typedef ErrorMessageNative = Void Function();
+
+typedef ErrorCode = void Function();
+typedef ErrorCodeNative = Void Function();

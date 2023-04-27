@@ -59,16 +59,17 @@ impl Error {
             Error::Utf8(_) => 3,
             Error::JWK(_) => 4,
             Error::Zcap(_) => 5,
+            Error::InfraDID(_) => 6,
             _ => -1,
         }
     }
 }
 
 #[no_mangle]
-/// Retrieve a human-readable description of the most recent error encountered by a DIDKit C
-/// function. The returned string is valid until the next call to a DIDKit function in the current
+/// Retrieve a human-readable description of the most recent error encountered by a InfraDID C
+/// function. The returned string is valid until the next call to a InfraDID function in the current
 /// thread, and should not be mutated or freed. If there has not been any error, `NULL` is returned.
-pub extern "C" fn didkit_error_message() -> *const c_char {
+pub extern "C" fn infra_error_message() -> *const c_char {
     LAST_ERROR.with(|error| match error.try_borrow() {
         Ok(maybe_err_ref) => match &*maybe_err_ref {
             Some(err) => err.1.as_ptr() as *const c_char,
@@ -79,9 +80,9 @@ pub extern "C" fn didkit_error_message() -> *const c_char {
 }
 
 #[no_mangle]
-/// Retrieve a numeric code for the most recent error encountered by a DIDKit C function. If there
+/// Retrieve a numeric code for the most recent error encountered by a InfraDID C function. If there
 /// has not been an error, 0 is returned.
-pub extern "C" fn didkit_error_code() -> c_int {
+pub extern "C" fn infra_error_code() -> c_int {
     LAST_ERROR.with(|error| match error.try_borrow() {
         Ok(maybe_err_ref) => match &*maybe_err_ref {
             Some(err) => err.0,
