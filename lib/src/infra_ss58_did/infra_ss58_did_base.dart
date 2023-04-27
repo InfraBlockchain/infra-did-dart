@@ -29,6 +29,7 @@ class InfraSS58DID {
 
     // Native call
     final ptrResult = _bindings.generate_ss58_did(networkIdPtr);
+    if (ptrResult.address == nullptr.address) throw lastError();
 
     // Cast the result pointer to a Dart string
     final result = ptrResult.cast<Utf8>().toDartString();
@@ -51,6 +52,7 @@ class InfraSS58DID {
     // Native call
     final ptrResult =
         _bindings.generate_ss58_did_from_phrase(suriPtr, networkIdPtr);
+    if (ptrResult.address == nullptr.address) throw lastError();
 
     // Cast the result pointer to a Dart string
     final result = ptrResult.cast<Utf8>().toDartString();
@@ -71,6 +73,7 @@ class InfraSS58DID {
 
     // Native call
     final ptrResult = _bindings.did_to_hex_public_key(didPtr);
+    if (ptrResult.address == nullptr.address) throw lastError();
 
     // Cast the result pointer to a Dart string
     final result = ptrResult.cast<Utf8>().toDartString();
@@ -92,6 +95,7 @@ class InfraSS58DID {
 
     // Native call
     final ptrResult = _bindings.ss58_address_to_did(addressPtr, networkIdPtr);
+    if (ptrResult.address == nullptr.address) throw lastError();
 
     // Cast the result pointer to a Dart string
     final result = ptrResult.cast<Utf8>().toDartString();
@@ -112,6 +116,7 @@ class InfraSS58DID {
 
     // Native call
     final ptrResult = _bindings.resolve(didPtr);
+    if (ptrResult.address == nullptr.address) throw lastError();
 
     // Cast the result pointer to a Dart string
     final result = ptrResult.cast<Utf8>().toDartString();
@@ -136,6 +141,7 @@ class InfraSS58DID {
     // Native call
     final ptrResult =
         _bindings.issue_credential(didPtr, credentialJsonPtr, hexPrivateKeyPtr);
+    if (ptrResult.address == nullptr.address) throw lastError();
 
     // Cast the result pointer to a Dart string
     final result = ptrResult.cast<Utf8>().toDartString();
@@ -156,6 +162,7 @@ class InfraSS58DID {
 
     // Native call
     final ptrResult = _bindings.verify_credential(credentialJsonPtr);
+    if (ptrResult.address == nullptr.address) throw lastError();
 
     // Cast the result pointer to a Dart string
     final result = ptrResult.cast<Utf8>().toDartString();
@@ -180,6 +187,7 @@ class InfraSS58DID {
     // Native call
     final ptrResult = _bindings.issue_presentation(
         didPtr, credentialJsonPtr, hexPrivateKeyPtr);
+    if (ptrResult.address == nullptr.address) throw lastError();
 
     // Cast the result pointer to a Dart string
     final result = ptrResult.cast<Utf8>().toDartString();
@@ -200,6 +208,7 @@ class InfraSS58DID {
 
     // Native call
     final ptrResult = _bindings.verify_presentation(presentationJsonPtr);
+    if (ptrResult.address == nullptr.address) throw lastError();
 
     // Cast the result pointer to a Dart string
     final result = ptrResult.cast<Utf8>().toDartString();
@@ -218,4 +227,25 @@ class InfraSS58DID {
     final ptr = value.toNativeUtf8().cast<Utf8>();
     return _bindings.rust_cstr_free(ptr);
   }
+}
+
+class InfraDIDException implements Exception {
+  int code;
+  String message;
+  InfraDIDException(this.code, this.message);
+
+  @override
+  String toString() {
+    return 'InfraDIDException ($code): $message';
+  }
+}
+
+InfraDIDException lastError() {
+  final code = InfraSS58DID._bindings.get_error_code();
+  final message_utf8 = InfraSS58DID._bindings.get_error_message();
+  final message_string = message_utf8.address == nullptr.address
+      ? 'Unable to get error message'
+      : message_utf8.toDartString();
+
+  return InfraDIDException(code, message_string);
 }
