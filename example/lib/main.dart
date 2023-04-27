@@ -214,23 +214,27 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             ElevatedButton(
-                onPressed: _generateSS58DID, child: Text("_generateSS58DID")),
+                onPressed: _generateSS58DID,
+                child: const Text("generateSS58DID")),
             ElevatedButton(
                 onPressed: _didToHexPublicKey,
-                child: Text("_didToHexPublicKey")),
+                child: const Text("didToHexPublicKey")),
             ElevatedButton(
-                onPressed: _ss58AdressToDID, child: Text("_ss58AdressToDID")),
+                onPressed: _ss58AdressToDID,
+                child: const Text("ss58AdressToDID")),
             ElevatedButton(
-                onPressed: _issueCredential, child: Text("_issueCredential")),
+                onPressed: _issueCredential,
+                child: const Text("issueCredential")),
             ElevatedButton(
-                onPressed: _verifyCredential, child: Text("_verifyCredential")),
+                onPressed: _verifyCredential,
+                child: const Text("verifyCredential")),
             ElevatedButton(
                 onPressed: _issuePresentation,
-                child: Text("_issuePresentation")),
+                child: const Text("issuePresentation")),
             ElevatedButton(
                 onPressed: _verifyPresentation,
-                child: Text("_verifyPresentation")),
-            ElevatedButton(onPressed: _resolve, child: Text("resolve")),
+                child: const Text("verifyPresentation")),
+            ElevatedButton(onPressed: _resolve, child: const Text("resolve")),
             Text(data)
           ],
         ),
