@@ -23,10 +23,10 @@ blake2-rfc = "0.2.18"
 rustc-hex = "2.0.1"
 ed25519-dalek = "1.0.1"
 bs58 = "0.4.0"
-infra-did = { path = "/Users/user/Desktop/infra-did-rust" }
+infra-did = { path = "/Users/user/Documents/Develop/repo/infra-did-rust" }
 ssi-dids = "0.1.1"
 thiserror = "1.0.40"
-ssi = "0.6.0"
+ssi = "0.7.0"
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 tokio = { version = "1.0", features = ["rt-multi-thread"] }
