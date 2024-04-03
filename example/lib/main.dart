@@ -35,6 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _generateSS58DID() {
     setState(() {
       data = InfraSS58DID.generateSS58DID("01");
+      print(data);
     });
   }
 
@@ -55,20 +56,20 @@ class _MyHomePageState extends State<MyHomePage> {
   void _resolve() {
     setState(() {
       data = InfraSS58DID.resolve(
-          "did:infra:space:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW");
+          "did:infra:01:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW");
     });
   }
 
   void _issueCredential() {
     String did =
-        "did:infra:space:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW";
+        "did:infra:01:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW";
     String privateKey =
         "8006aaa5985f1d72e916167bdcbc663232cef5823209b1246728f73137888170";
     String credential = """{
             "@context": [
                 "https://www.w3.org/2018/credentials/v1"
             ],
-            "id": "did:infra:space:5FDseiC76zPek2YYkuyenu4ZgxZ7PUWXt9d19HNB5CaQXt5U",
+            "id": "did:infra:01:5FDseiC76zPek2YYkuyenu4ZgxZ7PUWXt9d19HNB5CaQXt5U",
             "type": [
                 "VerifiableCredential"
             ],
@@ -78,40 +79,38 @@ class _MyHomePageState extends State<MyHomePage> {
                 }
             ],
             "issuanceDate": "2023-04-24T06:08:03.039Z",
-            "issuer": "did:infra:space:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW"
+            "issuer": "did:infra:01:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW"
         }""";
     setState(() {
       data = InfraSS58DID.issueCredential(did, credential, privateKey);
+      print(data);
     });
   }
 
   void _verifyCredential() {
     String credential = """{
-            "@context": [
-                "https://www.w3.org/2018/credentials/v1"
-            ],
-            "id": "did:infra:space:5FDseiC76zPek2YYkuyenu4ZgxZ7PUWXt9d19HNB5CaQXt5U",
-            "type": [
-                "VerifiableCredential"
-            ],
-            "credentialSubject": [
-                {
-                    "id": "did:example:d23dd687a7dc6787646f2eb98d0"
-                }
-            ],
-            "issuer": "did:infra:space:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW",
-            "issuanceDate": "2023-04-24T06:08:03.039Z",
-            "proof": {
-                "@context": [
-                    "https://w3id.org/security/suites/ed25519-2020/v1"
-                ],
-                "type": "Ed25519Signature2020",
-                "proofPurpose": "assertionMethod",
-                "proofValue": "z3gFJvCvNYTVQJ7R7tXzbmAyZ62g3ZymbzwTrWJhgwatJouope5GnQmz7NW2zAVVYbor5KUW8TUa1V5KADPp8kBog",
-                "verificationMethod": "did:infra:space:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW#keys-2",
-                "created": "2023-04-25T23:52:13.770Z"
-            }
-        }""";
+      "@context": [
+        "https://www.w3.org/2018/credentials/v1"
+      ],
+      "id": "did:infra:01:5FDseiC76zPek2YYkuyenu4ZgxZ7PUWXt9d19HNB5CaQXt5U",
+      "type": [
+        "VerifiableCredential"
+      ],
+      "credentialSubject": [
+        {
+          "id": "did:example:d23dd687a7dc6787646f2eb98d0"
+        }
+      ],
+      "issuer": "did:infra:01:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW",
+      "issuanceDate": "2023-04-24T06:08:03.039Z",
+      "proof": {
+        "type": "Ed25519Signature2018",
+        "proofPurpose": "assertionMethod",
+        "verificationMethod": "did:infra:01:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW#keys-1",
+        "created": "2024-04-03T01:13:18.220667Z",
+        "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..VZU_0mj3fD-Nrcq1Zu4r_tqOhQERfI8RMpPeDHX3dQkmTyvOG5AUFtgebrr-wS1RqHIRgvxqIBaSE51dHwUtBA"
+      }
+    }""";
     setState(() {
       data = InfraSS58DID.verifyCredential(credential);
     });
@@ -119,35 +118,32 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _issuePresentation() {
     String did =
-        "did:infra:space:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW";
+        "did:infra:01:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW";
     String privateKey =
         "8006aaa5985f1d72e916167bdcbc663232cef5823209b1246728f73137888170";
     String credential = """{
             "@context": [
-                "https://www.w3.org/2018/credentials/v1"
+              "https://www.w3.org/2018/credentials/v1"
             ],
-            "id": "did:infra:space:5FDseiC76zPek2YYkuyenu4ZgxZ7PUWXt9d19HNB5CaQXt5U",
+            "id": "did:infra:01:5FDseiC76zPek2YYkuyenu4ZgxZ7PUWXt9d19HNB5CaQXt5U",
             "type": [
-                "VerifiableCredential"
+              "VerifiableCredential"
             ],
             "credentialSubject": [
-                {
-                    "id": "did:example:d23dd687a7dc6787646f2eb98d0"
-                }
+              {
+                "id": "did:example:d23dd687a7dc6787646f2eb98d0"
+              }
             ],
-            "issuer": "did:infra:space:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW",
+            "issuer": "did:infra:01:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW",
             "issuanceDate": "2023-04-24T06:08:03.039Z",
             "proof": {
-                "@context": [
-                    "https://w3id.org/security/suites/ed25519-2020/v1"
-                ],
-                "type": "Ed25519Signature2020",
-                "proofPurpose": "assertionMethod",
-                "proofValue": "z3gFJvCvNYTVQJ7R7tXzbmAyZ62g3ZymbzwTrWJhgwatJouope5GnQmz7NW2zAVVYbor5KUW8TUa1V5KADPp8kBog",
-                "verificationMethod": "did:infra:space:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW#keys-2",
-                "created": "2023-04-25T23:52:13.770Z"
+              "type": "Ed25519Signature2018",
+              "proofPurpose": "assertionMethod",
+              "verificationMethod": "did:infra:01:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW#keys-1",
+              "created": "2024-04-03T01:13:18.220667Z",
+              "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..VZU_0mj3fD-Nrcq1Zu4r_tqOhQERfI8RMpPeDHX3dQkmTyvOG5AUFtgebrr-wS1RqHIRgvxqIBaSE51dHwUtBA"
             }
-        }""";
+          }""";
     setState(() {
       data = InfraSS58DID.issuePresentation(did, credential, privateKey);
     });
@@ -155,49 +151,43 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _verifyPresentation() {
     String credential = """{
-            "@context": [
-                "https://www.w3.org/2018/credentials/v1"
-            ],
-            "id": "did:infra:01:5C65pZF9tBxUgRarjqNQRLUYaxhjDatawtJsPUFLsv8HrRDs",
-            "type": "VerifiablePresentation",
-            "verifiableCredential": {
-                "@context": [
-                    "https://www.w3.org/2018/credentials/v1"
-                ],
-                "id": "did:infra:space:5FDseiC76zPek2YYkuyenu4ZgxZ7PUWXt9d19HNB5CaQXt5U",
-                "type": [
-                    "VerifiableCredential"
-                ],
-                "credentialSubject": [
-                    {
-                        "id": "did:example:d23dd687a7dc6787646f2eb98d0"
-                    }
-                ],
-                "issuer": "did:infra:space:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW",
-                "issuanceDate": "2023-04-24T06:08:03.039Z",
-                "proof": {
-                    "@context": [
-                        "https://w3id.org/security/suites/ed25519-2020/v1"
-                    ],
-                    "type": "Ed25519Signature2020",
-                    "proofPurpose": "assertionMethod",
-                    "proofValue": "z3gFJvCvNYTVQJ7R7tXzbmAyZ62g3ZymbzwTrWJhgwatJouope5GnQmz7NW2zAVVYbor5KUW8TUa1V5KADPp8kBog",
-                    "verificationMethod": "did:infra:space:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW#keys-2",
-                    "created": "2023-04-25T23:52:13.770Z"
-                }
-            },
-            "proof": {
-                "@context": [
-                    "https://w3id.org/security/suites/ed25519-2020/v1"
-                ],
-                "type": "Ed25519Signature2020",
-                "proofPurpose": "assertionMethod",
-                "proofValue": "z5fwTSAD25dFq62rYCzeNUD5TfYwpgSB7HLa9eLtDMpPVB2hb83rbvDmydwPmwubiswWYvcZVmxqG34GxkkLkypDY",
-                "verificationMethod": "did:infra:space:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW#keys-2",
-                "created": "2023-04-26T00:21:22.810Z"
-            },
-            "holder": "did:infra:space:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW"
-        }""";
+        "@context": [
+          "https://www.w3.org/2018/credentials/v1"
+        ],
+        "id": "did:infra:01:5F9myCAKW52XUU38Z4uhttmYYLoLFWe9AnEVpv1aGpx9Q3Bp",
+        "type": "VerifiablePresentation",
+        "verifiableCredential": {
+          "@context": [
+            "https://www.w3.org/2018/credentials/v1"
+          ],
+          "id": "did:infra:01:5FDseiC76zPek2YYkuyenu4ZgxZ7PUWXt9d19HNB5CaQXt5U",
+          "type": [
+            "VerifiableCredential"
+          ],
+          "credentialSubject": [
+            {
+              "id": "did:example:d23dd687a7dc6787646f2eb98d0"
+            }
+          ],
+          "issuer": "did:infra:01:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW",
+          "issuanceDate": "2023-04-24T06:08:03.039Z",
+          "proof": {
+            "type": "Ed25519Signature2018",
+            "proofPurpose": "assertionMethod",
+            "verificationMethod": "did:infra:01:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW#keys-1",
+            "created": "2024-04-03T01:13:18.220667Z",
+            "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..VZU_0mj3fD-Nrcq1Zu4r_tqOhQERfI8RMpPeDHX3dQkmTyvOG5AUFtgebrr-wS1RqHIRgvxqIBaSE51dHwUtBA"
+          }
+        },
+        "proof": {
+          "type": "Ed25519Signature2018",
+          "proofPurpose": "assertionMethod",
+          "verificationMethod": "did:infra:01:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW#keys-1",
+          "created": "2024-04-03T01:16:09.837873Z",
+          "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..XMUnK1nLJI3jahunuS-ooEVWAKgN3VwiUc0cm2xiFNMdgnBqYi6-n-uPdpDJls6-7BXlLhR4W4nGlPrptQFTBA"
+        },
+        "holder": "did:infra:01:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW"
+      }""";
     setState(() {
       data = InfraSS58DID.verifyPresentation(credential);
     });
