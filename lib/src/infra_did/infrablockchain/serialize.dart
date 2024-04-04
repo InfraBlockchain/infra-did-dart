@@ -468,8 +468,8 @@ Type createType({
     required bool allowExtensions,
   })?
       deserialize,
-  String baseName: "",
-  List<Field> fields: const [],
+  String baseName = "",
+  List<Field> fields = const [],
   Type? extensionOf,
 }) {
   var t = Type(
