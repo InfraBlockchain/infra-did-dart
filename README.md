@@ -1,5 +1,7 @@
 # infra-did-dart
 
+**Check [README-SS58](/README-SS58.md) for using ss58 based did**
+
 **This Library is dart version of infra-did-js**
 
 -   Infra DID Method Spec
@@ -28,7 +30,8 @@ Feature provided by infra-did-dart Library :
 -   **Using [pub](https://pub.dev)**:
 
 ```sh
-dart pub add infra_did_dart
+dart pub add infra_did_dart # this not work now cause we are not published yet
+dart pub add infra_did_dart --git-url=https://github.com/InfraBlockchain/infra-did-dart.git # you can add with git url
 ```
 
 ### Infra DID Creation
