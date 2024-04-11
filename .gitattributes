@@ -1,1 +1,0 @@
-ios/libinfra_did_binding.a filter=lfs diff=lfs merge=lfs -text
