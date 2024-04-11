@@ -1,0 +1,22 @@
+PODS:
+  - Flutter (1.0.0)
+  - infra_did_dart (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - infra_did_dart (from `.symlinks/plugins/infra_did_dart/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  infra_did_dart:
+    :path: ".symlinks/plugins/infra_did_dart/ios"
+
+SPEC CHECKSUMS:
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  infra_did_dart: 9be97cf76b2f5f9348a6ed64b4a7b2f6373e7af6
+
+PODFILE CHECKSUM: 4e8f8b2be68aeea4c0d5beb6ff1e79fface1d048
+
+COCOAPODS: 1.14.3
