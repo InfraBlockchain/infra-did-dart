@@ -25,6 +25,15 @@ Feature provided by infra-did-dart Library :
 -   get trusted Pub-Key DID & Account DID
 -   VC/VP creation/verification
 
+## How to run local
+
+```sh
+git clone https://github.com/InfraBlockchain/infra-did-dart
+cd infra-did-dart
+git lfs install
+git lfs pull
+```
+
 ## Installation
 
 -   **Using [pub](https://pub.dev)**:
