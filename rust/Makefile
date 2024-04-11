@@ -48,7 +48,7 @@ ios: target/universal/release/libinfra_did_binding.a
 
 target/universal/release/libinfra_did_binding.a: $(SOURCES) ndk-home
 	@if [ $$(uname) == "Darwin" ] ; then \
-		cargo lipo --release ; \
+		cargo lipo --release --targets aarch64-apple-ios ; \
 		else echo "Skipping iOS compilation on $$(uname)" ; \
 	fi
 	@echo "[DONE] $@"
