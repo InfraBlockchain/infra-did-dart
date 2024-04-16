@@ -55,8 +55,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _resolve() {
     setState(() {
-      data = InfraSS58DID.resolve(
-          "did:infra:01:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW");
+      InfraDidDocument didDocument = InfraSS58DID.resolve(didSet.did);
+      data = didDocument.toString();
     });
   }
 

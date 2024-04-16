@@ -1,10 +1,10 @@
 import 'dart:ffi';
 import 'dart:io';
 import 'package:ffi/ffi.dart';
-import 'package:bip39/bip39.dart' as bip39;
 import 'package:infra_did_dart/src/infra_ss58_did/model/infra_did_set.dart';
 import 'package:infra_did_dart/src/infra_ss58_did/util/util.dart';
 import './bindings.dart';
+import 'model/did_document.dart';
 
 const DYNAMIC_LIBRARY_FILE_NAME_ANDROID = "libinfra_did_binding.so";
 const DYNAMIC_LIBRARY_FILE_NAME_MACOS = "libinfra_did_binding.dylib";
@@ -122,24 +122,26 @@ class InfraSS58DID {
     }
   }
 
-  static String resolve(String did) {
-    _checkBinding();
+  static InfraDidDocument resolve(String did) {
+    try {
+      _checkBinding();
 
-    final didPtr = did.toNativeUtf8().cast<Utf8>();
+      final didPtr = did.toNativeUtf8().cast<Utf8>();
 
-    // Native call
-    final ptrResult = _bindings.resolve(didPtr);
-    if (ptrResult.address == nullptr.address) throw lastError();
+      // Native call
+      final ptrResult = _bindings.resolve(didPtr);
+      if (ptrResult.address == nullptr.address) throw lastError();
 
-    // Cast the result pointer to a Dart string
-    final result = ptrResult.cast<Utf8>().toDartString();
+      // Cast the result pointer to a Dart string
+      final result = ptrResult.cast<Utf8>().toDartString();
 
-    // Free the native value
-    InfraSS58DID._free(result);
+      // Free the native value
+      InfraSS58DID._free(result);
 
-    print('resolve result: $result');
-
-    return result;
+      return InfraDidDocument.fromStringJson(result);
+    } catch(e) {
+      throw InfraDIDException(5, e.toString());
+    }
   }
 
   static String issueCredential(

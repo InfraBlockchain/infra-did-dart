@@ -14,5 +14,6 @@ export 'src/infra_did/verifiable/verifiable.dart';
 
 export 'src/infra_ss58_did/infra_ss58_did_base.dart';
 export 'src/infra_ss58_did/model/infra_did_set.dart';
+export 'src/infra_ss58_did/model/did_document.dart';
 
 // TODO: Export any libraries intended for clients of this package.
