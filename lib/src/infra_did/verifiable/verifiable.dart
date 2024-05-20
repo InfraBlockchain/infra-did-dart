@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:eosdart_ecc/eosdart_ecc.dart';
 import 'package:jose/jose.dart';
 import 'package:secp256k1/secp256k1.dart';
 

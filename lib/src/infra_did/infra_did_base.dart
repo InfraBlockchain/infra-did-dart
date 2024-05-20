@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:crypto/crypto.dart';
 import 'package:eosdart_ecc/eosdart_ecc.dart';
-import 'package:secp256k1/secp256k1.dart';
 
 import '../../infra_did_dart.dart';
 import 'infrablockchain/client.dart';
