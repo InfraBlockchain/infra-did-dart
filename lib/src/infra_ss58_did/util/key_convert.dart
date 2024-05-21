@@ -96,6 +96,13 @@ Map<String, dynamic> ed25519JwkFromEd25519PublicKey(
   };
 }
 
+Uint8List x25519PublicKeyFromEd25519PublicKey(List<int> publicKey) {
+  Uint8List x25519Pk = Uint8List.fromList(List.filled(32, 0));
+  Uint8List ed25519Pk = Uint8List.fromList(publicKey);
+  TweetNaClExt.crypto_sign_ed25519_pk_to_x25519_pk(x25519Pk, ed25519Pk);
+  return x25519Pk;
+}
+
 /// Converts an Ed25519 public key to a X25519 public key and then to a JWK (JSON Web Key) representation.
 /// Returns the JWK.
 Map<String, dynamic> x25519JwkFromEd25519PublicKey(

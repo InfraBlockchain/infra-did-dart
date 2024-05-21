@@ -11,19 +11,21 @@ class InfraSS58DID {
   late String chainEndpoint;
   late Provider provider;
   late Did api;
+  late StateApi stateApi;
   late InfraSS58DIDSet didSet;
-  late String? controllerDID;
-  late String? controllerSeed;
+  late String controllerDID;
+  late String controllerMnemonic;
   late String? txfeePayerAccountSeed;
 
   InfraSS58DID(
       {required this.chainEndpoint,
       required this.didSet,
-      this.controllerDID,
-      this.controllerSeed,
+      required this.controllerDID,
+      required this.controllerMnemonic,
       this.txfeePayerAccountSeed}) {
     provider = Provider.fromUri(Uri.parse(this.chainEndpoint));
     api = Did(provider);
+    stateApi = StateApi(provider);
   }
 
   static Future<InfraSS58DIDSet> generateSS58DID(String networkId) async {

@@ -28,6 +28,8 @@ void main() {
       InfraSS58DID infraSS58DID = InfraSS58DID(
         didSet: didSet,
         chainEndpoint: "wss://did.stage.infrablockspace.net",
+        controllerDID: didSet.did,
+        controllerMnemonic: didSet.seed,
       );
       expect(infraSS58DID.didSet, didSet);
     } catch (e) {

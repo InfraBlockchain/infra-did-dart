@@ -1,15 +1,15 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:infra_did_dart/src/infra_ss58_did/chain/did_module/did_module.dart';
+import 'package:infra_did_dart/src/infra_ss58_did/chain/did.dart';
 import 'package:infra_did_dart/src/infra_ss58_did/generated/did/did.dart';
 import 'package:infra_did_dart/src/infra_ss58_did/model/infra_ss58_did_document.dart';
 import 'package:infra_did_dart/src/infra_ss58_did/util/key_convert.dart';
 import 'package:polkadart/polkadart.dart';
 import 'package:ss58/ss58.dart';
 
-import '../model/did_module/onchain_did_detail.dart';
-import '../model/did_module/verification_relationship.dart';
+import '../model/did/onchain_did_detail.dart';
+import '../model/did/verification_relationship.dart';
 
 class InfraSS58DIDResolver {
   late Provider provider;
