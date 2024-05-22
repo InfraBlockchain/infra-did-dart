@@ -32,12 +32,17 @@ String ss58AddressToDID(String address, String networkId) {
 }
 
 String jsonToHex(Map<String, dynamic> json) {
-  // JSON 데이터를 UTF-8 바이트 배열로 변환
   List<int> bytes = utf8.encode(jsonEncode(json));
 
-  // 바이트 배열을 16진수 문자열로 변환
   String hex =
       bytes.map((byte) => byte.toRadixString(16).padLeft(2, '0')).join();
 
   return hex;
+}
+
+String addPaddingToBase64(String base64Input) {
+  while (base64Input.length % 4 != 0) {
+    base64Input += '=';
+  }
+  return base64Input;
 }

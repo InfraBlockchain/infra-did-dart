@@ -96,6 +96,21 @@ Map<String, dynamic> ed25519JwkFromEd25519PublicKey(
   };
 }
 
+List<int> ed25519PublicKeyFromBase58(String base58Encoded) {
+  return base58.decode(base58Encoded);
+}
+
+List<int> ed25519PublicKeyFromMultibase(
+  String multibase,
+) {
+  return base58.decode(multibase.substring(1));
+}
+
+List<int> ed25519PublicKeyFromEd25519Jwk(Map<String, dynamic> jwk) {
+  var x = jwk["x"];
+  return base64Url.decode(x);
+}
+
 Uint8List x25519PublicKeyFromEd25519PublicKey(List<int> publicKey) {
   Uint8List x25519Pk = Uint8List.fromList(List.filled(32, 0));
   Uint8List ed25519Pk = Uint8List.fromList(publicKey);

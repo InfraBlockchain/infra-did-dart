@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:infra_did_dart/src/infra_ss58_did/model/signer.dart';
+
 class InfraSS58DIDSet {
   String address;
   String seed;
@@ -28,5 +30,10 @@ class InfraSS58DIDSet {
       'did': did,
       'mnemonic': mnemonic,
     };
+  }
+
+  CredentialSigner toCredentialSigner(String keyId, String keyType) {
+    return CredentialSigner(
+        did: did, keyId: keyId, keyType: keyType, seed: seed);
   }
 }
