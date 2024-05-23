@@ -5,6 +5,7 @@ class CredentialSigner {
   final String keyId;
   final String keyType;
   final String seed;
+  final String mnemonic;
   late String signatureType;
   late String signatureName;
 
@@ -13,6 +14,7 @@ class CredentialSigner {
     required this.keyId,
     required this.keyType,
     required this.seed,
+    required this.mnemonic,
   }) {
     if (this.keyType == "Ed25519VerificationKey2018") {
       this.signatureType = "Ed25519";

@@ -23,10 +23,11 @@ class InfraSS58VerifiablePresentation {
       'verificationMethod': holderDid + "#" + holderSigner.keyId,
       'created': DateTime.now().toUtc().toIso8601String()
     };
-    List<int> privateKey = hex.decode(holderSigner.seed);
+    List<int> privateKey =
+        await extendedPrivateKeyFromUri(holderSigner.mnemonic);
 
     String pOptions = await JsonLdProcessor.normalize(proofOptions,
-        options: JsonLdOptions(safeMode: true, documentLoader: loadDocument));
+        options: JsonLdOptions(safeMode: false, documentLoader: loadDocument));
     List<int> hashToSign = await _dataToHash(presentation);
 
     var pOptionsHash = sha256.convert(utf8.encode(pOptions)).bytes;
@@ -66,7 +67,7 @@ class InfraSS58VerifiablePresentation {
     proofOptions.remove('proofValue');
 
     String pOptions = await JsonLdProcessor.normalize(proofOptions,
-        options: JsonLdOptions(safeMode: true, documentLoader: loadDocument));
+        options: JsonLdOptions(safeMode: false, documentLoader: loadDocument));
 
     verifiablePresentation.remove('proofOptions');
     List<int> hashToSign = await _dataToHash(verifiablePresentation);
@@ -87,8 +88,8 @@ class InfraSS58VerifiablePresentation {
       return sha256
           .convert(utf8.encode(await JsonLdProcessor.normalize(
               Map<String, dynamic>.from(data),
-              options:
-                  JsonLdOptions(safeMode: true, documentLoader: loadDocument))))
+              options: JsonLdOptions(
+                  safeMode: false, documentLoader: loadDocument))))
           .bytes;
     } else if (data is String) {
       return sha256.convert(utf8.encode(data)).bytes;

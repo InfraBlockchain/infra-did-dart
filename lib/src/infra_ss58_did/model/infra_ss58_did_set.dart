@@ -34,6 +34,10 @@ class InfraSS58DIDSet {
 
   CredentialSigner toCredentialSigner(String keyId, String keyType) {
     return CredentialSigner(
-        did: did, keyId: keyId, keyType: keyType, seed: seed);
+        did: did,
+        keyId: keyId,
+        keyType: keyType,
+        seed: seed,
+        mnemonic: mnemonic);
   }
 }

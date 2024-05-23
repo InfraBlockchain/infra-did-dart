@@ -23,10 +23,11 @@ class InfraSS58VerifiableCredential {
       'verificationMethod': issuerDid + "#" + issuerSigner.keyId,
       'created': DateTime.now().toUtc().toIso8601String()
     };
-    List<int> privateKey = hex.decode(issuerSigner.seed);
+    List<int> privateKey =
+        await extendedPrivateKeyFromUri(issuerSigner.mnemonic);
 
     String pOptions = await JsonLdProcessor.normalize(proofOptions,
-        options: JsonLdOptions(safeMode: true, documentLoader: loadDocument));
+        options: JsonLdOptions(safeMode: false, documentLoader: loadDocument));
     List<int> hashToSign = await _dataToHash(credential);
 
     var pOptionsHash = sha256.convert(utf8.encode(pOptions)).bytes;
@@ -66,7 +67,7 @@ class InfraSS58VerifiableCredential {
     proofOptions.remove('proofValue');
 
     String pOptions = await JsonLdProcessor.normalize(proofOptions,
-        options: JsonLdOptions(safeMode: true, documentLoader: loadDocument));
+        options: JsonLdOptions(safeMode: false, documentLoader: loadDocument));
 
     verifiableCredential.remove('proofOptions');
     List<int> hashToSign = await _dataToHash(verifiableCredential);

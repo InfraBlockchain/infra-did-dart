@@ -1,21 +1,65 @@
-import "package:infra_did_dart/src/infra_ss58_did/model/infra_ss58_did_document.dart";
+import "dart:convert";
+
+import "package:infra_did_dart/infra_did_dart.dart";
+import "package:infra_did_dart/src/infra_ss58_did/model/infra_ss58_did_set.dart";
+import "package:infra_did_dart/src/infra_ss58_did/model/signer.dart";
 import "package:infra_did_dart/src/infra_ss58_did/resolver/resolver.dart";
+import "package:infra_did_dart/src/infra_ss58_did/verifiable/verifiable_credential.dart";
+import "package:infra_did_dart/src/infra_ss58_did/verifiable/verifiable_presentation.dart";
 import "package:test/test.dart";
 
-void main() {
-  test("Should get default DID Document", () async {
-    final did = "did:infra:01:5DpboW3jm8AnkZxN1Jkdk1ZxisuQyYV6rDGGicYzXDdjETpe";
-    InfraSS58DIDDocument document =
-        InfraSS58DIDResolver.resolveDefaultDocument(did);
-    print(document.toJson());
-  });
+Future<void> main() async {
+  String phrase =
+      "biology other aware floor recall journey coin bubble dial hurdle coconut canoe";
+  InfraSS58DIDSet didSet =
+      await InfraSS58DID.generateSS58DIDFromPhrase(phrase, "01");
 
-  test("Should get DID Document", () async {
-    final did = "did:infra:01:5DpboW3jm8AnkZxN1Jkdk1ZxisuQyYV6rDGGicYzXDdjETpe";
-    InfraSS58DIDResolver resolver =
-        InfraSS58DIDResolver("wss://did.stage.infrablockspace.net");
+  InfraSS58DID infraSS58DID = InfraSS58DID(
+    didSet: didSet,
+    chainEndpoint: "wss://did.stage.infrablockspace.net",
+    controllerDID: didSet.did,
+    controllerMnemonic: didSet.mnemonic,
+  );
 
-    InfraSS58DIDDocument document = await resolver.resolve(did);
-    print(document.toJson());
+  test("Should issue vp", () async {
+    CredentialSigner cs = CredentialSigner(
+        did: didSet.did,
+        keyId: "key-2",
+        keyType: "Ed25519VerificationKey2020",
+        seed: didSet.seed,
+        mnemonic: didSet.mnemonic);
+
+    String vc = """{
+    "@context": [
+        "https://www.w3.org/2018/credentials/v1",
+        "https://www.w3.org/2018/credentials/examples/v1"
+    ],
+    "id": "did:infra:01:5D1vAs2qC6XS3Raxy3W38xo2TiZXBcrT6PN3WkrN4SZDZuVJ",
+    "type": ["VerifiableCredential"],
+    "credentialSubject": [{ "id": "did:example:d23dd687a7dc6787646f2eb98d0" }],
+    "issuanceDate": "2024-05-23T06:08:03.039Z",
+    "issuer": "did:infra:01:5D1vAs2qC6XS3Raxy3W38xo2TiZXBcrT6PN3WkrN4SZDZuVJ",
+    "proofOptions": {
+        "@context": "https://w3id.org/security/suites/ed25519-2020/v1",
+        "type": "Ed25519",
+        "proofPurpose": "assertionMethod",
+        "verificationMethod": "did:infra:01:5D1vAs2qC6XS3Raxy3W38xo2TiZXBcrT6PN3WkrN4SZDZuVJ#key-2",
+        "created": "2024-05-23T02:22:33.589280Z",
+        "proofValue": "z5s3iK3xHnGepLcjopisRUJYrpsh3WpLEyj8SakJPu4icYViotCS3XmX5SmdpwtLuvppKu4rohCA478RHvKRrro9C"
+    }
+}
+    """;
+
+    final vp = await InfraSS58VerifiablePresentation()
+        .issueVp(jsonDecode(vc), infraSS58DID.didSet.did, cs);
+    print(jsonEncode(vp));
+
+    final resolver = InfraSS58DIDResolver(
+      infraSS58DID.chainEndpoint,
+    );
+
+    final isVerified =
+        await InfraSS58VerifiableCredential().verifyVc(vp, resolver);
+    print(isVerified);
   });
 }
