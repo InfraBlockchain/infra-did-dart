@@ -30,7 +30,7 @@ import 'package:polkadart_keyring/polkadart_keyring.dart' as keyring;
 
 String createNewRegistryId() {
   final Random _random = Random.secure();
-  final List<int> values = List<int>.generate(16, (i) => _random.nextInt(256));
+  final List<int> values = List<int>.generate(32, (i) => _random.nextInt(256));
   return hex.encode(values);
 }
 

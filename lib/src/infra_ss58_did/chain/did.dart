@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 import 'package:convert/convert.dart' show hex;
 
 import 'package:infra_did_dart/src/infra_ss58_did/generated/did/did.dart';
@@ -222,10 +221,10 @@ Future<String> removeKeys(InfraSS58DID infraSS58DID, List<int> keyIds) async {
 
 Future<String> addServiceEndpoint(
   InfraSS58DID infraSS58DID,
-  List<String> originsTexts,
+  List<String> originsTexts, {
   ServiceEndpointType? endpointType,
   String? endpointIdText,
-) async {
+}) async {
   try {
     final api = infraSS58DID.api;
     String address = infraSS58DID.didSet.did.split(":").last;
@@ -240,13 +239,13 @@ Future<String> addServiceEndpoint(
       endpointType = new ServiceEndpointType(1);
     }
 
-    final origins = originsTexts.map((origin) => hex.decode(origin)).toList();
+    final origins = originsTexts.map((origin) => utf8.encode(origin)).toList();
     final endpoint =
         ServiceEndpoint(origins: origins, types: endpointType.value);
 
     final addServiceEndpoint = AddServiceEndpoint(
         did: hexDID,
-        id: hex.decode(endpointIdText),
+        id: utf8.encode(endpointIdText),
         endpoint: endpoint,
         nonce: nonce + 1);
     final stateMessage = state_change.AddServiceEndpoint(addServiceEndpoint);
@@ -267,9 +266,9 @@ Future<String> addServiceEndpoint(
 }
 
 Future<String> removeServiceEndpoint(
-  InfraSS58DID infraSS58DID,
+  InfraSS58DID infraSS58DID, {
   String? endpointIdText,
-) async {
+}) async {
   try {
     final api = infraSS58DID.api;
     String address = infraSS58DID.didSet.did.split(":").last;
@@ -282,7 +281,7 @@ Future<String> removeServiceEndpoint(
       endpointIdText = infraSS58DID.didSet.did + "#linked-domain";
 
     final removeServiceEndpoint = RemoveServiceEndpoint(
-        did: hexDID, id: hex.decode(endpointIdText), nonce: nonce + 1);
+        did: hexDID, id: utf8.encode(endpointIdText), nonce: nonce + 1);
     final stateMessage =
         state_change.RemoveServiceEndpoint(removeServiceEndpoint);
     final controllerWallet =

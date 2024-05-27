@@ -40,13 +40,6 @@ String createNewAuthorizerId() {
   return hex.encode(values);
 }
 
-Future<String> getRevokeId(String vcId) async {
-  final algorithm = Blake2b(hashLengthInBytes: 32);
-  final hash = await algorithm.hash(hex.decode(vcId));
-
-  return hex.encode(hash.bytes);
-}
-
 Future<String> registerAuthorizer(
     InfraSS58DID infraSS58DID, String id, bool addOnly) async {
   try {
@@ -77,7 +70,7 @@ Future<String> addIssuer(
     final nonce = didDetails.onChain.nonce;
     final addIssuer = AddIssuerRaw(
         authorizerId: hex.decode(authorizerId),
-        entityIds: [hex.decode(issuerDID.split(":").last)]);
+        entityIds: [publicKeyFromAddress(issuerDID.split(":").last)]);
 
     final stateMessage = state_change.AddIssuer(
         with_nonce_6.WithNonce(data: addIssuer, nonce: nonce + 1));
@@ -111,7 +104,7 @@ Future<String> removeIssuer(
     final nonce = didDetails.onChain.nonce;
     final removeIssuer = RemoveIssuerRaw(
         authorizerId: hex.decode(authorizerId),
-        entityIds: [hex.decode(issuerDID)]);
+        entityIds: [publicKeyFromAddress(issuerDID.split(":").last)]);
 
     final stateMessage = state_change.RemoveIssuer(
         with_nonce_7.WithNonce(data: removeIssuer, nonce: nonce + 1));
@@ -135,7 +128,7 @@ Future<String> removeIssuer(
 }
 
 Future<String> addVerifier(
-    InfraSS58DID infraSS58DID, String authorizerId, String verifierDiD) async {
+    InfraSS58DID infraSS58DID, String authorizerId, String verifierDID) async {
   try {
     final api = infraSS58DID.api;
     String address = infraSS58DID.didSet.did.split(":").last;
@@ -145,7 +138,7 @@ Future<String> addVerifier(
     final nonce = didDetails.onChain.nonce;
     final addVerifier = AddVerifierRaw(
         authorizerId: hex.decode(authorizerId),
-        entityIds: [hex.decode(verifierDiD.split(":").last)]);
+        entityIds: [publicKeyFromAddress(verifierDID.split(":").last)]);
 
     final stateMessage = state_change.AddVerifier(
         with_nonce_8.WithNonce(data: addVerifier, nonce: nonce + 1));
@@ -179,7 +172,7 @@ Future<String> removeVerifier(
     final nonce = didDetails.onChain.nonce;
     final removeVerifier = RemoveVerifierRaw(
         authorizerId: hex.decode(authorizerId),
-        entityIds: [hex.decode(verifierDID)]);
+        entityIds: [publicKeyFromAddress(verifierDID.split(":").last)]);
 
     final stateMessage = state_change.RemoveVerifier(
         with_nonce_9.WithNonce(data: removeVerifier, nonce: nonce + 1));

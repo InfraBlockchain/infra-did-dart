@@ -26,7 +26,9 @@ writeSchemaOnChainByBlob(
   final nonce = didDetails.onChain.nonce;
 
   final addBlob = AddBlob(
-      blob: Blob(blob: hex.decode(jsonToHex(blobSchema)), id: blobSchema["id"]),
+      blob: Blob(
+          blob: hex.decode(jsonToHex(blobSchema)),
+          id: utf8.encode(blobSchema["id"])),
       nonce: nonce + 1);
   final stateMessage = state_change.AddBlob(addBlob);
   final controllerWallet = await keyring.KeyPair.ed25519
