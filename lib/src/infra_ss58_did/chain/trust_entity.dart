@@ -83,16 +83,14 @@ Future<String> addIssuer(
         with_nonce_6.WithNonce(data: addIssuer, nonce: nonce + 1));
     final controllerWallet = await keyring.KeyPair.ed25519
         .fromMnemonic(infraSS58DID.controllerMnemonic);
-    String jsonString = jsonEncode(stateMessage.toJson());
-    List<int> utf8Bytes = utf8.encode(jsonString);
-    Uint8List uint8List = Uint8List.fromList(utf8Bytes);
 
     final addIssuerSig = DidSignatureWithNonce(
         nonce: nonce + 1,
         sig: DidSignature(
             did: hexDID,
             keyId: 1,
-            sig: sig_value.Ed25519(controllerWallet.sign(uint8List))));
+            sig: sig_value.Ed25519(
+                controllerWallet.sign(stateMessage.encode()))));
 
     final runtimeCall = await api.tx.trustedEntity
         .addIssuer(addIssuer: addIssuer, proof: [addIssuerSig]);
@@ -119,16 +117,14 @@ Future<String> removeIssuer(
         with_nonce_7.WithNonce(data: removeIssuer, nonce: nonce + 1));
     final controllerWallet = await keyring.KeyPair.ed25519
         .fromMnemonic(infraSS58DID.controllerMnemonic);
-    String jsonString = jsonEncode(stateMessage.toJson());
-    List<int> utf8Bytes = utf8.encode(jsonString);
-    Uint8List uint8List = Uint8List.fromList(utf8Bytes);
 
     final removeIssuerSig = DidSignatureWithNonce(
         nonce: nonce + 1,
         sig: DidSignature(
             did: hexDID,
             keyId: 1,
-            sig: sig_value.Ed25519(controllerWallet.sign(uint8List))));
+            sig: sig_value.Ed25519(
+                controllerWallet.sign(stateMessage.encode()))));
 
     final runtimeCall = await api.tx.trustedEntity
         .removeIssuer(removeIssuer: removeIssuer, proof: [removeIssuerSig]);
@@ -155,16 +151,14 @@ Future<String> addVerifier(
         with_nonce_8.WithNonce(data: addVerifier, nonce: nonce + 1));
     final controllerWallet = await keyring.KeyPair.ed25519
         .fromMnemonic(infraSS58DID.controllerMnemonic);
-    String jsonString = jsonEncode(stateMessage.toJson());
-    List<int> utf8Bytes = utf8.encode(jsonString);
-    Uint8List uint8List = Uint8List.fromList(utf8Bytes);
 
     final addVerifierSig = DidSignatureWithNonce(
         nonce: nonce + 1,
         sig: DidSignature(
             did: hexDID,
             keyId: 1,
-            sig: sig_value.Ed25519(controllerWallet.sign(uint8List))));
+            sig: sig_value.Ed25519(
+                controllerWallet.sign(stateMessage.encode()))));
 
     final runtimeCall = await api.tx.trustedEntity
         .addVerifier(addVerifier: addVerifier, proof: [addVerifierSig]);
@@ -191,16 +185,14 @@ Future<String> removeVerifier(
         with_nonce_9.WithNonce(data: removeVerifier, nonce: nonce + 1));
     final controllerWallet = await keyring.KeyPair.ed25519
         .fromMnemonic(infraSS58DID.controllerMnemonic);
-    String jsonString = jsonEncode(stateMessage.toJson());
-    List<int> utf8Bytes = utf8.encode(jsonString);
-    Uint8List uint8List = Uint8List.fromList(utf8Bytes);
 
     final removeVerifierSig = DidSignatureWithNonce(
         nonce: nonce + 1,
         sig: DidSignature(
             did: hexDID,
             keyId: 1,
-            sig: sig_value.Ed25519(controllerWallet.sign(uint8List))));
+            sig: sig_value.Ed25519(
+                controllerWallet.sign(stateMessage.encode()))));
 
     final runtimeCall = await api.tx.trustedEntity.removeVerifier(
         removeVerifier: removeVerifier, proof: [removeVerifierSig]);
@@ -226,16 +218,14 @@ Future<String> unregisterAuthorizer(
         with_nonce_10.WithNonce(data: removeAuthorizer, nonce: nonce + 1));
     final controllerWallet = await keyring.KeyPair.ed25519
         .fromMnemonic(infraSS58DID.controllerMnemonic);
-    String jsonString = jsonEncode(stateMessage.toJson());
-    List<int> utf8Bytes = utf8.encode(jsonString);
-    Uint8List uint8List = Uint8List.fromList(utf8Bytes);
 
     final removeAuthorizerSig = DidSignatureWithNonce(
         nonce: nonce + 1,
         sig: DidSignature(
             did: hexDID,
             keyId: 1,
-            sig: sig_value.Ed25519(controllerWallet.sign(uint8List))));
+            sig: sig_value.Ed25519(
+                controllerWallet.sign(stateMessage.encode()))));
 
     final runtimeCall = await api.tx.trustedEntity.removeAuthorizer(
         removal: removeAuthorizer, proof: [removeAuthorizerSig]);

@@ -71,14 +71,11 @@ Future<String> unregisterDIDOnChain(InfraSS58DID infraSS58DID) async {
     final stateMessage = state_change.DidRemoval(didRemoval);
     final controllerWallet =
         await KeyPair.ed25519.fromMnemonic(infraSS58DID.controllerMnemonic);
-    String jsonString = jsonEncode(stateMessage.toJson());
-    List<int> utf8Bytes = utf8.encode(jsonString);
-    Uint8List uint8List = Uint8List.fromList(utf8Bytes);
 
     final removeOnchainSig = DidSignature(
         did: hexDID,
         keyId: 1,
-        sig: sig_value.Ed25519(controllerWallet.sign(uint8List)));
+        sig: sig_value.Ed25519(controllerWallet.sign(stateMessage.encode())));
 
     final runtimeCall = await api.tx.dIDModule
         .removeOnchainDid(removal: didRemoval, sig: removeOnchainSig);
@@ -108,14 +105,11 @@ Future<String> addControllers(
     final stateMessage = state_change.AddControllers(addControllers);
     final controllerWallet =
         await KeyPair.ed25519.fromMnemonic(infraSS58DID.controllerMnemonic);
-    String jsonString = jsonEncode(stateMessage.toJson());
-    List<int> utf8Bytes = utf8.encode(jsonString);
-    Uint8List uint8List = Uint8List.fromList(utf8Bytes);
 
     final controllerDIDsig = DidSignature(
         did: hexDID,
         keyId: 1,
-        sig: sig_value.Ed25519(controllerWallet.sign(uint8List)));
+        sig: sig_value.Ed25519(controllerWallet.sign(stateMessage.encode())));
 
     final runtimeCall = await api.tx.dIDModule
         .addControllers(controllers: addControllers, sig: controllerDIDsig);
@@ -145,14 +139,11 @@ Future<String> removeControllers(
     final stateMessage = state_change.RemoveControllers(removeControllers);
     final controllerWallet =
         await KeyPair.ed25519.fromMnemonic(infraSS58DID.controllerMnemonic);
-    String jsonString = jsonEncode(stateMessage.toJson());
-    List<int> utf8Bytes = utf8.encode(jsonString);
-    Uint8List uint8List = Uint8List.fromList(utf8Bytes);
 
     final removeControllerSig = DidSignature(
         did: hexDID,
         keyId: 1,
-        sig: sig_value.Ed25519(controllerWallet.sign(uint8List)));
+        sig: sig_value.Ed25519(controllerWallet.sign(stateMessage.encode())));
 
     final runtimeCall = await api.tx.dIDModule.removeControllers(
         controllers: removeControllers, sig: removeControllerSig);
@@ -188,14 +179,11 @@ Future<String> addKeys(InfraSS58DID infraSS58DID, List<DIDKey> didKeys) async {
     final stateMessage = state_change.AddKeys(addKeys);
     final controllerWallet =
         await KeyPair.ed25519.fromMnemonic(infraSS58DID.controllerMnemonic);
-    String jsonString = jsonEncode(stateMessage.toJson());
-    List<int> utf8Bytes = utf8.encode(jsonString);
-    Uint8List uint8List = Uint8List.fromList(utf8Bytes);
 
     final addKeysSig = DidSignature(
         did: hexDID,
         keyId: 1,
-        sig: sig_value.Ed25519(controllerWallet.sign(uint8List)));
+        sig: sig_value.Ed25519(controllerWallet.sign(stateMessage.encode())));
 
     final runtimeCall =
         await api.tx.dIDModule.addKeys(keys: addKeys, sig: addKeysSig);
@@ -218,14 +206,11 @@ Future<String> removeKeys(InfraSS58DID infraSS58DID, List<int> keyIds) async {
     final stateMessage = state_change.RemoveKeys(removeKeys);
     final controllerWallet =
         await KeyPair.ed25519.fromMnemonic(infraSS58DID.controllerMnemonic);
-    String jsonString = jsonEncode(stateMessage.toJson());
-    List<int> utf8Bytes = utf8.encode(jsonString);
-    Uint8List uint8List = Uint8List.fromList(utf8Bytes);
 
     final removeKeysSig = DidSignature(
         did: hexDID,
         keyId: 1,
-        sig: sig_value.Ed25519(controllerWallet.sign(uint8List)));
+        sig: sig_value.Ed25519(controllerWallet.sign(stateMessage.encode())));
 
     final runtimeCall =
         await api.tx.dIDModule.removeKeys(keys: removeKeys, sig: removeKeysSig);
@@ -267,14 +252,11 @@ Future<String> addServiceEndpoint(
     final stateMessage = state_change.AddServiceEndpoint(addServiceEndpoint);
     final controllerWallet =
         await KeyPair.ed25519.fromMnemonic(infraSS58DID.controllerMnemonic);
-    String jsonString = jsonEncode(stateMessage.toJson());
-    List<int> utf8Bytes = utf8.encode(jsonString);
-    Uint8List uint8List = Uint8List.fromList(utf8Bytes);
 
     final addServiceEndpointSig = DidSignature(
         did: hexDID,
         keyId: 1,
-        sig: sig_value.Ed25519(controllerWallet.sign(uint8List)));
+        sig: sig_value.Ed25519(controllerWallet.sign(stateMessage.encode())));
 
     final runtimeCall = await api.tx.dIDModule.addServiceEndpoint(
         serviceEndpoint: addServiceEndpoint, sig: addServiceEndpointSig);
@@ -305,14 +287,11 @@ Future<String> removeServiceEndpoint(
         state_change.RemoveServiceEndpoint(removeServiceEndpoint);
     final controllerWallet =
         await KeyPair.ed25519.fromMnemonic(infraSS58DID.controllerMnemonic);
-    String jsonString = jsonEncode(stateMessage.toJson());
-    List<int> utf8Bytes = utf8.encode(jsonString);
-    Uint8List uint8List = Uint8List.fromList(utf8Bytes);
 
     final removeServiceEndpointSig = DidSignature(
         did: hexDID,
         keyId: 1,
-        sig: sig_value.Ed25519(controllerWallet.sign(uint8List)));
+        sig: sig_value.Ed25519(controllerWallet.sign(stateMessage.encode())));
 
     final runtimeCall = await api.tx.dIDModule.removeServiceEndpoint(
         serviceEndpoint: removeServiceEndpoint, sig: removeServiceEndpointSig);

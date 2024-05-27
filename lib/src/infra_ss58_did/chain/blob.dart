@@ -31,14 +31,11 @@ writeSchemaOnChainByBlob(
   final stateMessage = state_change.AddBlob(addBlob);
   final controllerWallet = await keyring.KeyPair.ed25519
       .fromMnemonic(infraSS58DID.controllerMnemonic);
-  String jsonString = jsonEncode(stateMessage.toJson());
-  List<int> utf8Bytes = utf8.encode(jsonString);
-  Uint8List uint8List = Uint8List.fromList(utf8Bytes);
 
   final addBlobSig = DidSignature(
       did: hexDID,
       keyId: 1,
-      sig: sig_value.Ed25519(controllerWallet.sign(uint8List)));
+      sig: sig_value.Ed25519(controllerWallet.sign(stateMessage.encode())));
 
   final runtimeCall =
       await api.tx.blobStore.new_(blob: addBlob, signature: addBlobSig);

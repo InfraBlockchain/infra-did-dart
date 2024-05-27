@@ -76,16 +76,14 @@ Future<String> revokeCredential(
         with_nonce_1.WithNonce(data: revoke, nonce: nonce + 1));
     final controllerWallet = await keyring.KeyPair.ed25519
         .fromMnemonic(infraSS58DID.controllerMnemonic);
-    String jsonString = jsonEncode(stateMessage.toJson());
-    List<int> utf8Bytes = utf8.encode(jsonString);
-    Uint8List uint8List = Uint8List.fromList(utf8Bytes);
 
     final revokeSig = DidSignatureWithNonce(
         nonce: nonce + 1,
         sig: DidSignature(
             did: hexDID,
             keyId: 1,
-            sig: sig_value.Ed25519(controllerWallet.sign(uint8List))));
+            sig: sig_value.Ed25519(
+                controllerWallet.sign(stateMessage.encode()))));
 
     final runtimeCall =
         await api.tx.revoke.revoke(revoke: revoke, proof: [revokeSig]);
@@ -111,16 +109,14 @@ Future<String> unrevokeCredential(
         with_nonce_2.WithNonce(data: unrevoke, nonce: nonce + 1));
     final controllerWallet = await keyring.KeyPair.ed25519
         .fromMnemonic(infraSS58DID.controllerMnemonic);
-    String jsonString = jsonEncode(stateMessage.toJson());
-    List<int> utf8Bytes = utf8.encode(jsonString);
-    Uint8List uint8List = Uint8List.fromList(utf8Bytes);
 
     final unrevokeSig = DidSignatureWithNonce(
         nonce: nonce + 1,
         sig: DidSignature(
             did: hexDID,
             keyId: 1,
-            sig: sig_value.Ed25519(controllerWallet.sign(uint8List))));
+            sig: sig_value.Ed25519(
+                controllerWallet.sign(stateMessage.encode()))));
 
     final runtimeCall =
         await api.tx.revoke.unrevoke(unrevoke: unrevoke, proof: [unrevokeSig]);
@@ -146,16 +142,14 @@ Future<String> unregisterRegistry(
         with_nonce_3.WithNonce(data: removeRegistry, nonce: nonce + 1));
     final controllerWallet = await keyring.KeyPair.ed25519
         .fromMnemonic(infraSS58DID.controllerMnemonic);
-    String jsonString = jsonEncode(stateMessage.toJson());
-    List<int> utf8Bytes = utf8.encode(jsonString);
-    Uint8List uint8List = Uint8List.fromList(utf8Bytes);
 
     final removeRegistrySig = DidSignatureWithNonce(
         nonce: nonce + 1,
         sig: DidSignature(
             did: hexDID,
             keyId: 1,
-            sig: sig_value.Ed25519(controllerWallet.sign(uint8List))));
+            sig: sig_value.Ed25519(
+                controllerWallet.sign(stateMessage.encode()))));
 
     final runtimeCall = await api.tx.revoke
         .removeRegistry(removal: removeRegistry, proof: [removeRegistrySig]);
