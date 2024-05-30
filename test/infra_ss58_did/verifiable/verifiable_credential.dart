@@ -3,13 +3,11 @@ import "dart:convert";
 import "package:infra_did_dart/infra_did_dart.dart";
 import "package:infra_did_dart/src/infra_ss58_did/model/infra_ss58_did_set.dart";
 import "package:infra_did_dart/src/infra_ss58_did/model/signer.dart";
-import "package:infra_did_dart/src/infra_ss58_did/resolver/resolver.dart";
-import "package:infra_did_dart/src/infra_ss58_did/verifiable/verifiable_credential.dart";
 import "package:test/test.dart";
 
 Future<void> main() async {
   String phrase =
-      "biology other aware floor recall journey coin bubble dial hurdle coconut canoe";
+      "bamboo absorb chief dog box envelope leisure pink alone service spin more";
   InfraSS58DIDSet didSet =
       await InfraSS58DID.generateSS58DIDFromPhrase(phrase, "01");
 
@@ -33,7 +31,7 @@ Future<void> main() async {
               "https://www.w3.org/2018/credentials/v1",
               "https://www.w3.org/2018/credentials/examples/v1"
             ],
-            "id": "did:infra:01:5D1vAs2qC6XS3Raxy3W38xo2TiZXBcrT6PN3WkrN4SZDZuVJ",
+            "id": "did:infra:01:5EX1sTeRrA7nwpFmapyUhMhzJULJSs9uByxHTc6YTAxsc58z",
             "type": [
                 "VerifiableCredential"
             ],
@@ -43,7 +41,7 @@ Future<void> main() async {
                 }
             ],
             "issuanceDate": "2024-05-23T06:08:03.039Z",
-            "issuer": "did:infra:01:5D1vAs2qC6XS3Raxy3W38xo2TiZXBcrT6PN3WkrN4SZDZuVJ"
+            "issuer": "did:infra:01:5EX1sTeRrA7nwpFmapyUhMhzJULJSs9uByxHTc6YTAxsc58z"
         }""";
 
     final vc = await InfraSS58VerifiableCredential()
