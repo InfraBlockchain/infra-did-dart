@@ -14,8 +14,12 @@ import 'package:ed25519_edwards/ed25519_edwards.dart' as ed;
 import 'package:base_codecs/base_codecs.dart';
 
 class InfraSS58VerifiablePresentation {
-  Future<Map<String, dynamic>> issueVp(Map<String, dynamic> presentation,
-      String holderDid, CredentialSigner holderSigner) async {
+  Future<Map<String, dynamic>> issueVp(
+    Map<String, dynamic> presentation,
+    String holderDid,
+    CredentialSigner holderSigner,
+    String? challenge,
+  ) async {
     var proofOptions = {
       '@context': ed25519ContextIri,
       'type': holderSigner.signatureType,
@@ -23,6 +27,9 @@ class InfraSS58VerifiablePresentation {
       'verificationMethod': holderDid + "#" + holderSigner.keyId,
       'created': DateTime.now().toUtc().toIso8601String()
     };
+    if (challenge != null) {
+      proofOptions['challenge'] = challenge;
+    }
     List<int> privateKey =
         await extendedPrivateKeyFromUri(holderSigner.mnemonic);
 

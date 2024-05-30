@@ -54,7 +54,7 @@ Future<void> main() async {
     """;
 
     final vp = await InfraSS58VerifiablePresentation()
-        .issueVp(jsonDecode(vc), infraSS58DID.didSet.did, cs);
+        .issueVp(jsonDecode(vc), infraSS58DID.didSet.did, cs, "challenge");
     print(jsonEncode(vp));
 
     final resolver = InfraSS58DIDResolver(
