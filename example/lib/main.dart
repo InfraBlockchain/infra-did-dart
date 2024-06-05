@@ -112,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     }""";
     setState(() {
-      data = InfraSS58DID.verifyCredential(credential) ? 'True': 'False';
+      data = InfraSS58DID.verifyCredential(credential) ? 'True' : 'False';
     });
   }
 
@@ -189,7 +189,7 @@ class _MyHomePageState extends State<MyHomePage> {
         "holder": "did:infra:01:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW"
       }""";
     setState(() {
-      data = InfraSS58DID.verifyPresentation(credential) ? 'True': 'False';
+      data = InfraSS58DID.verifyPresentation(credential) ? 'True' : 'False';
     });
   }
 
