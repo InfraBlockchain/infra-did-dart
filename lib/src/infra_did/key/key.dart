@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:eosdart_ecc/eosdart_ecc.dart';
 
 import '../infrablockchain/numeric.dart';

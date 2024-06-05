@@ -31,32 +31,32 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String data = "";
+  late final InfraDidSet didSet;
 
   void _generateSS58DID() {
     setState(() {
-      data = InfraSS58DID.generateSS58DID("01");
+      didSet = InfraSS58DID.generateSS58DID("01");
+      data = didSet.did;
       print(data);
     });
   }
 
   void _didToHexPublicKey() {
     setState(() {
-      data = InfraSS58DID.didToHexPublicKey(
-          "did:infra:01:5GM7RtekqU8cGiS4MKQ7tufoH4Q1itzmoFpVcvcPfjksyPrw");
+      data = InfraSS58DID.didToHexPublicKey(didSet.did);
     });
   }
 
-  void _ss58AdressToDID() {
+  void _ss58AddressToDID() {
     setState(() {
-      data = InfraSS58DID.ss58AdressToDID(
-          "5H6PhTQ1ukXBE1pqYVt2BMLjiKD9pqVsoppp2g8eM4EENAfL", "01");
+      data = InfraSS58DID.ss58AddressToDID(didSet.address, "01");
     });
   }
 
   void _resolve() {
     setState(() {
-      data = InfraSS58DID.resolve(
-          "did:infra:01:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW");
+      InfraDidDocument didDocument = InfraSS58DID.resolve(didSet.did);
+      data = didDocument.toString();
     });
   }
 
@@ -112,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     }""";
     setState(() {
-      data = InfraSS58DID.verifyCredential(credential);
+      data = InfraSS58DID.verifyCredential(credential) ? 'True' : 'False';
     });
   }
 
@@ -189,7 +189,7 @@ class _MyHomePageState extends State<MyHomePage> {
         "holder": "did:infra:01:5GpEYnXBoLgvzyWe4Defitp5UV25xZUiUCJM2xNgkDXkM4NW"
       }""";
     setState(() {
-      data = InfraSS58DID.verifyPresentation(credential);
+      data = InfraSS58DID.verifyPresentation(credential) ? 'True' : 'False';
     });
   }
 
@@ -210,8 +210,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: _didToHexPublicKey,
                 child: const Text("didToHexPublicKey")),
             ElevatedButton(
-                onPressed: _ss58AdressToDID,
-                child: const Text("ss58AdressToDID")),
+                onPressed: _ss58AddressToDID,
+                child: const Text("ss58AddressToDID")),
             ElevatedButton(
                 onPressed: _issueCredential,
                 child: const Text("issueCredential")),
