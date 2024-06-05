@@ -18,8 +18,10 @@ class InfraSS58VerifiablePresentation {
     String holderDid,
     CredentialSigner holderSigner,
     String? challenge,
+    String? domain,
   ) async {
     var proofOptions = {
+      "@context": "https://w3id.org/security/v2",
       'type': holderSigner.signatureName,
       'proofPurpose': 'assertionMethod',
       'verificationMethod': holderDid + "#" + holderSigner.keyId,
@@ -27,6 +29,9 @@ class InfraSS58VerifiablePresentation {
     };
     if (challenge != null) {
       proofOptions['challenge'] = challenge;
+    }
+    if (domain != null) {
+      proofOptions['domain'] = domain;
     }
     List<int> privateKey =
         await extendedPrivateKeyFromUri(holderSigner.mnemonic);
@@ -42,13 +47,28 @@ class InfraSS58VerifiablePresentation {
         ed.sign(ed.PrivateKey(privateKey), Uint8List.fromList(hash));
 
     proofOptions['proofValue'] = 'z${base58BitcoinEncode(signature)}';
+    // proofOptions.remove('@context');
     presentation["proof"] = proofOptions;
     return presentation;
   }
 
-  Future<bool> verifyVp(Map<String, dynamic> verifiablePresentation,
-      InfraSS58DIDResolver resolver) async {
+  Future<bool> verifyVp(
+    Map<String, dynamic> verifiablePresentation,
+    InfraSS58DIDResolver resolver,
+    String? challenge,
+    String? domain,
+  ) async {
     var proofOptions = verifiablePresentation['proof'];
+    if (challenge != null) {
+      if (proofOptions['challenge'] != challenge) {
+        throw InfraDIDException(1, 'Challenge not match');
+      }
+    }
+    if (domain != null) {
+      if (proofOptions['domain'] != domain) {
+        throw InfraDIDException(1, 'Domain not match');
+      }
+    }
 
     var holderKeyId = proofOptions['verificationMethod'];
     InfraSS58DIDDocument issuerDocument =
@@ -68,12 +88,13 @@ class InfraSS58VerifiablePresentation {
     };
 
     var proofValue = proofOptions['proofValue'];
-
+    if (proofOptions["@context"] == null) {
+      proofOptions["@context"] = "https://w3id.org/security/v2";
+    }
     proofOptions.remove('proofValue');
 
     String pOptions = await JsonLdProcessor.normalize(proofOptions,
         options: JsonLdOptions(safeMode: false, documentLoader: loadDocument));
-
     verifiablePresentation.remove('proof');
     List<int> hashToSign = await _dataToHash(verifiablePresentation);
 
@@ -90,12 +111,11 @@ class InfraSS58VerifiablePresentation {
     } else if (data is List<int>) {
       return data;
     } else if (data is Map<String, dynamic>) {
-      return sha256
-          .convert(utf8.encode(await JsonLdProcessor.normalize(
-              Map<String, dynamic>.from(data),
-              options: JsonLdOptions(
-                  safeMode: false, documentLoader: loadDocument))))
-          .bytes;
+      var c14nDoc = await JsonLdProcessor.normalize(
+          Map<String, dynamic>.from(data),
+          options:
+              JsonLdOptions(safeMode: false, documentLoader: loadDocument));
+      return sha256.convert(utf8.encode(c14nDoc)).bytes;
     } else if (data is String) {
       return sha256.convert(utf8.encode(data)).bytes;
     } else {

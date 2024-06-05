@@ -80,7 +80,7 @@ currently ed25519 curve is supported
   );
       CredentialSigner cs = CredentialSigner(
         did: didSet.did,
-        keyId: "key-2",
+        keyId: "keys-2",
         keyType: "Ed25519VerificationKey2020",
         seed: didSet.seed,
         mnemonic: didSet.mnemonic);
@@ -163,7 +163,7 @@ Verified Credential Result
   );
     CredentialSigner cs = CredentialSigner(
         did: didSet.did,
-        keyId: "key-2",
+        keyId: "keys-2",
         keyType: "Ed25519VerificationKey2020",
         seed: didSet.seed,
         mnemonic: didSet.mnemonic);
@@ -182,7 +182,7 @@ Verified Credential Result
         "@context": "https://w3id.org/security/suites/ed25519-2020/v1",
         "type": "Ed25519",
         "proofPurpose": "assertionMethod",
-        "verificationMethod": "did:infra:01:5D1vAs2qC6XS3Raxy3W38xo2TiZXBcrT6PN3WkrN4SZDZuVJ#key-2",
+        "verificationMethod": "did:infra:01:5D1vAs2qC6XS3Raxy3W38xo2TiZXBcrT6PN3WkrN4SZDZuVJ#keys-2",
         "created": "2024-05-23T02:22:33.589280Z",
         "proofValue": "z5s3iK3xHnGepLcjopisRUJYrpsh3WpLEyj8SakJPu4icYViotCS3XmX5SmdpwtLuvppKu4rohCA478RHvKRrro9C"
     }

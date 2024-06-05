@@ -21,15 +21,15 @@ Future<void> main() async {
   test("Should issue vc & verify vc", () async {
     CredentialSigner cs = CredentialSigner(
         did: didSet.did,
-        keyId: "key-2",
-        keyType: "Ed25519VerificationKey2020",
+        keyId: "keys-1",
+        keyType: "Ed25519VerificationKey2018",
         seed: didSet.seed,
         mnemonic: didSet.mnemonic);
 
     String credentialString = """{
             "@context": [
               "https://www.w3.org/2018/credentials/v1",
-              "https://www.w3.org/2018/credentials/examples/v1"
+              "https://schema.org"
             ],
             "id": "did:infra:01:5EX1sTeRrA7nwpFmapyUhMhzJULJSs9uByxHTc6YTAxsc58z",
             "type": [

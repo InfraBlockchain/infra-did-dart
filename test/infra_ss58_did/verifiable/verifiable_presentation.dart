@@ -21,7 +21,7 @@ Future<void> main() async {
   test("Should issue vp", () async {
     CredentialSigner cs = CredentialSigner(
         did: didSet.did,
-        keyId: "key-2",
+        keyId: "keys-2",
         keyType: "Ed25519VerificationKey2020",
         seed: didSet.seed,
         mnemonic: didSet.mnemonic);
@@ -30,34 +30,11 @@ Future<void> main() async {
 {
   "@context": [
     "https://www.w3.org/2018/credentials/v1",
-    "https://www.w3.org/2018/credentials/examples/v1"
+    "https://www.w3.org/2018/credentials/examples/v1",
+    "https://schema.org"
   ],
   "verifiableCredential": [
-    {
-      "@context": [
-        "https://www.w3.org/2018/credentials/v1",
-        "https://www.w3.org/2018/credentials/examples/v1"
-      ],
-      "id": "did:infra:01:5EX1sTeRrA7nwpFmapyUhMhzJULJSs9uByxHTc6YTAxsc58z",
-      "type": [
-        "VerifiableCredential"
-      ],
-      "credentialSubject": [
-        {
-          "id": "did:example:d23dd687a7dc6787646f2eb98d0"
-        }
-      ],
-      "issuanceDate": "2024-05-23T06:08:03.039Z",
-      "issuer": "did:infra:01:5EX1sTeRrA7nwpFmapyUhMhzJULJSs9uByxHTc6YTAxsc58z",
-      "proof": {
-        "type": "Ed25519Signature2020",
-        "proofPurpose": "assertionMethod",
-        "verificationMethod": "did:infra:01:5EX1sTeRrA7nwpFmapyUhMhzJULJSs9uByxHTc6YTAxsc58z#key-2",
-        "created": "2024-06-05T01:49:27.590726Z",
-        "proofValue": "z5ogf7czdcBwWmPy6ZmzpjsYYnSkWKwic3uF4Ac7otXcPQcPNidtAUsrULz3UwS4YxtaEV4J2AoMJCgSE7TZ794Bt"
-      }
-    }
-  ],
+{"@context":["https://www.w3.org/2018/credentials/v1","https://www.w3.org/2018/credentials/examples/v1","https://schema.org"],"id":"did:infra:01:5EX1sTeRrA7nwpFmapyUhMhzJULJSs9uByxHTc6YTAxsc58z","type":["VerifiableCredential"],"credentialSubject":[{"id":"did:example:d23dd687a7dc6787646f2eb98d0"}],"issuanceDate":"2024-05-23T06:08:03.039Z","issuer":"did:infra:01:5EX1sTeRrA7nwpFmapyUhMhzJULJSs9uByxHTc6YTAxsc58z","proof":{"type":"Ed25519Signature2020","proofPurpose":"assertionMethod","verificationMethod":"did:infra:01:5EX1sTeRrA7nwpFmapyUhMhzJULJSs9uByxHTc6YTAxsc58z#keys-2","created":"2024-06-05T06:00:46.734682Z","proofValue":"z3XHaVZgi5PT71Z7ZUVyp9Mic59yuvV1LeTpBawcN13UexQc8YUMXzYcdAfngpmuMVR1b6X6zYqsjBzifk1XMHDZQ"}}  ],
   "id": "http://example.edu/credentials/2803",
   "type": ["VerifiablePresentation", "CredentialManagerPresentation"],
   "holder": "did:infra:01:5EX1sTeRrA7nwpFmapyUhMhzJULJSs9uByxHTc6YTAxsc58z"
@@ -65,15 +42,20 @@ Future<void> main() async {
     """;
 
     final vp = await InfraSS58VerifiablePresentation().issueVp(
-        jsonDecode(unsignedVP), infraSS58DID.didSet.did, cs, "challenge");
+      jsonDecode(unsignedVP),
+      infraSS58DID.didSet.did,
+      cs,
+      "challenge",
+      "newnal",
+    );
     print(jsonEncode(vp));
 
     final resolver = InfraSS58DIDResolver(
       infraSS58DID.chainEndpoint,
     );
 
-    final isVerified =
-        await InfraSS58VerifiablePresentation().verifyVp(vp, resolver);
+    final isVerified = await InfraSS58VerifiablePresentation()
+        .verifyVp(vp, resolver, "challenge", "newnal");
     print(isVerified);
   });
 }

@@ -16,6 +16,7 @@ class InfraSS58VerifiableCredential {
   Future<Map<String, dynamic>> issueVc(Map<String, dynamic> credential,
       String issuerDid, CredentialSigner issuerSigner) async {
     var proofOptions = {
+      "@context": "https://w3id.org/security/v2",
       'type': issuerSigner.signatureName,
       'proofPurpose': 'assertionMethod',
       'verificationMethod': issuerDid + "#" + issuerSigner.keyId,
@@ -26,6 +27,7 @@ class InfraSS58VerifiableCredential {
 
     String pOptions = await JsonLdProcessor.normalize(proofOptions,
         options: JsonLdOptions(safeMode: false, documentLoader: loadDocument));
+
     List<int> hashToSign = await _dataToHash(credential);
 
     var pOptionsHash = sha256.convert(utf8.encode(pOptions)).bytes;
@@ -35,6 +37,7 @@ class InfraSS58VerifiableCredential {
         ed.sign(ed.PrivateKey(privateKey), Uint8List.fromList(hash));
 
     proofOptions['proofValue'] = 'z${base58BitcoinEncode(signature)}';
+    proofOptions.remove('@context');
     credential["proof"] = proofOptions;
     return credential;
   }
@@ -62,10 +65,13 @@ class InfraSS58VerifiableCredential {
 
     var proofValue = proofOptions['proofValue'];
 
+    if (proofOptions["@context"] == null) {
+      proofOptions["@context"] = "https://w3id.org/security/v2";
+    }
     proofOptions.remove('proofValue');
 
     String pOptions = await JsonLdProcessor.normalize(proofOptions,
-        options: JsonLdOptions(safeMode: false, documentLoader: loadDocument));
+        options: JsonLdOptions(safeMode: true, documentLoader: loadDocument));
 
     verifiableCredential.remove('proof');
     List<int> hashToSign = await _dataToHash(verifiableCredential);
@@ -83,12 +89,11 @@ class InfraSS58VerifiableCredential {
     } else if (data is List<int>) {
       return data;
     } else if (data is Map<String, dynamic>) {
-      return sha256
-          .convert(utf8.encode(await JsonLdProcessor.normalize(
-              Map<String, dynamic>.from(data),
-              options:
-                  JsonLdOptions(safeMode: true, documentLoader: loadDocument))))
-          .bytes;
+      var c14nDoc = await JsonLdProcessor.normalize(
+          Map<String, dynamic>.from(data),
+          options:
+              JsonLdOptions(safeMode: false, documentLoader: loadDocument));
+      return sha256.convert(utf8.encode(c14nDoc)).bytes;
     } else if (data is String) {
       return sha256.convert(utf8.encode(data)).bytes;
     } else {

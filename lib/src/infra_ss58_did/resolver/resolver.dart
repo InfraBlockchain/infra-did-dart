@@ -31,30 +31,30 @@ class InfraSS58DIDResolver {
       controller: [did],
       verificationMethod: [
         VerificationMethod(
-            id: did + "#key-1",
+            id: did + "#keys-1",
             controller: did,
             type: "Ed25519VerificationKey2018",
             publicKeyBase58: base58FromEd25519PublicKey(publicKey)),
         VerificationMethod(
-            id: did + "#key-2",
+            id: did + "#keys-2",
             controller: did,
             type: "Ed25519VerificationKey2020",
             publicKeyMultibase: multibaseFromEd25519PublicKey(publicKey)),
         VerificationMethod(
-            id: did + "#key-3",
+            id: did + "#keys-3",
             controller: did,
             type: "JsonWebKey2020",
-            publicKeyJwk: ed25519JwkFromEd25519PublicKey(publicKey, "key-3")),
+            publicKeyJwk: ed25519JwkFromEd25519PublicKey(publicKey, "keys-3")),
         VerificationMethod(
-            id: did + "#key-4",
+            id: did + "#keys-4",
             controller: did,
             type: "JsonWebKey2020",
-            publicKeyJwk: x25519JwkFromEd25519PublicKey(publicKey, "key-4"))
+            publicKeyJwk: x25519JwkFromEd25519PublicKey(publicKey, "keys-4"))
       ],
-      authentication: [did + "#key-1", did + "#key-2", did + "#key-3"],
-      assertionMethod: [did + "#key-1", did + "#key-2", did + "#key-3"],
-      keyAgreement: [did + "#key-4"],
-      capabilityInvocation: [did + "#key-1", did + "#key-2", did + "#key-3"],
+      authentication: [did + "#keys-1", did + "#keys-2", did + "#keys-3"],
+      assertionMethod: [did + "#keys-1", did + "#keys-2", did + "#keys-3"],
+      keyAgreement: [did + "#keys-4"],
+      capabilityInvocation: [did + "#keys-1", did + "#keys-2", did + "#keys-3"],
       service: [],
     );
   }
@@ -124,52 +124,52 @@ class InfraSS58DIDResolver {
 
           if (publicKey["Ed25519"] != null) {
             verificationMethods.add(VerificationMethod(
-                id: did + "#key-" + keyNumber.toString(),
+                id: did + "#keys-" + keyNumber.toString(),
                 controller: did,
                 type: "Ed25519VerificationKey2018",
                 publicKeyBase58:
                     base58FromEd25519PublicKey(publicKey["Ed25519"])));
             verificationMethods.add(VerificationMethod(
-                id: did + "#key-" + (keyNumber + 1).toString(),
+                id: did + "#keys-" + (keyNumber + 1).toString(),
                 controller: did,
                 type: "Ed25519VerificationKey2020",
                 publicKeyMultibase:
                     multibaseFromEd25519PublicKey(publicKey["Ed25519"])));
             verificationMethods.add(VerificationMethod(
-                id: did + "#key-" + (keyNumber + 2).toString(),
+                id: did + "#keys-" + (keyNumber + 2).toString(),
                 controller: did,
                 type: "JsonWebKey2020",
                 publicKeyJwk: ed25519JwkFromEd25519PublicKey(
                     publicKey["Ed25519"],
-                    "key-" + (keyNumber + 2).toString())));
+                    "keys-" + (keyNumber + 2).toString())));
             if (verRels.isAssertion()) {
-              assertionMethods.add(did + "#key-" + keyNumber.toString());
-              assertionMethods.add(did + "#key-" + (keyNumber + 1).toString());
-              assertionMethods.add(did + "#key-" + (keyNumber + 2).toString());
+              assertionMethods.add(did + "#keys-" + keyNumber.toString());
+              assertionMethods.add(did + "#keys-" + (keyNumber + 1).toString());
+              assertionMethods.add(did + "#keys-" + (keyNumber + 2).toString());
             }
             if (verRels.isAuthentication()) {
-              authentications.add(did + "#key-" + keyNumber.toString());
-              authentications.add(did + "#key-" + (keyNumber + 1).toString());
-              authentications.add(did + "#key-" + (keyNumber + 2).toString());
+              authentications.add(did + "#keys-" + keyNumber.toString());
+              authentications.add(did + "#keys-" + (keyNumber + 1).toString());
+              authentications.add(did + "#keys-" + (keyNumber + 2).toString());
             }
             if (verRels.isCapabilityInvocation()) {
-              capabilityInvocations.add(did + "#key-" + keyNumber.toString());
+              capabilityInvocations.add(did + "#keys-" + keyNumber.toString());
               capabilityInvocations
-                  .add(did + "#key-" + (keyNumber + 1).toString());
+                  .add(did + "#keys-" + (keyNumber + 1).toString());
               capabilityInvocations
-                  .add(did + "#key-" + (keyNumber + 2).toString());
+                  .add(did + "#keys-" + (keyNumber + 2).toString());
             }
             keyNumber += 3;
           }
           if (publicKey["X25519"] != null) {
             verificationMethods.add(VerificationMethod(
-                id: did + "#key-" + keyNumber.toString(),
+                id: did + "#keys-" + keyNumber.toString(),
                 controller: did,
                 type: "JsonWebKey2020",
                 publicKeyJwk: x25519JwkFromEd25519PublicKey(
-                    publicKey["X25519"], "key-" + keyNumber.toString())));
+                    publicKey["X25519"], "keys-" + keyNumber.toString())));
             if (verRels.isKeyAgreement()) {
-              keyAgreements.add(did + "#key-" + keyNumber.toString());
+              keyAgreements.add(did + "#keys-" + keyNumber.toString());
             }
             keyNumber += 1;
           }

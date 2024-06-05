@@ -485,7 +485,7 @@ class InfraDID {
       publicKey.data.sublist(9, publicKey.data.length)
     ]);
     String sliceKeyHex = arrayToHex(sliceKey);
-    print(sliceKeyHex);
+
     List<Map<String, dynamic>> rows = await jsonRpc.getTableRows(
         registryContract, registryContract, 'trstdpkdid',
         lower: sliceKeyHex,
