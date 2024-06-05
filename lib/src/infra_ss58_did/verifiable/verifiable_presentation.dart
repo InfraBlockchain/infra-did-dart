@@ -6,7 +6,6 @@ import 'package:infra_did_dart/src/infra_ss58_did/model/exception.dart';
 import 'package:infra_did_dart/src/infra_ss58_did/model/infra_ss58_did_document.dart';
 import 'package:infra_did_dart/src/infra_ss58_did/model/signer.dart';
 import 'package:infra_did_dart/src/infra_ss58_did/resolver/resolver.dart';
-import 'package:infra_did_dart/src/infra_ss58_did/util/jsonLdContext/ed25519_signature.dart';
 import 'package:infra_did_dart/src/infra_ss58_did/util/key_convert.dart';
 import 'package:json_ld_processor/json_ld_processor.dart';
 import 'package:crypto/crypto.dart';
@@ -21,8 +20,7 @@ class InfraSS58VerifiablePresentation {
     String? challenge,
   ) async {
     var proofOptions = {
-      '@context': ed25519ContextIri,
-      'type': holderSigner.signatureType,
+      'type': holderSigner.signatureName,
       'proofPurpose': 'assertionMethod',
       'verificationMethod': holderDid + "#" + holderSigner.keyId,
       'created': DateTime.now().toUtc().toIso8601String()
@@ -44,19 +42,19 @@ class InfraSS58VerifiablePresentation {
         ed.sign(ed.PrivateKey(privateKey), Uint8List.fromList(hash));
 
     proofOptions['proofValue'] = 'z${base58BitcoinEncode(signature)}';
-    presentation["proofOptions"] = proofOptions;
+    presentation["proof"] = proofOptions;
     return presentation;
   }
 
   Future<bool> verifyVp(Map<String, dynamic> verifiablePresentation,
       InfraSS58DIDResolver resolver) async {
-    var proofOptions = verifiablePresentation['proofOptions'];
+    var proofOptions = verifiablePresentation['proof'];
 
-    var issuerKeyId = proofOptions['verificationMethod'];
+    var holderKeyId = proofOptions['verificationMethod'];
     InfraSS58DIDDocument issuerDocument =
-        await resolver.resolve(issuerKeyId.split('#')[0]);
+        await resolver.resolve(holderKeyId.split('#')[0]);
     VerificationMethod verificationMethod = issuerDocument.verificationMethod
-        .firstWhere((key) => key.id == issuerKeyId,
+        .firstWhere((key) => key.id == holderKeyId,
             orElse: () => throw InfraDIDException(1, 'Key not found'));
 
     List<int> decodedKey = switch (verificationMethod.type) {
@@ -76,7 +74,7 @@ class InfraSS58VerifiablePresentation {
     String pOptions = await JsonLdProcessor.normalize(proofOptions,
         options: JsonLdOptions(safeMode: false, documentLoader: loadDocument));
 
-    verifiablePresentation.remove('proofOptions');
+    verifiablePresentation.remove('proof');
     List<int> hashToSign = await _dataToHash(verifiablePresentation);
 
     var pOptionsHash = sha256.convert(utf8.encode(pOptions)).bytes;

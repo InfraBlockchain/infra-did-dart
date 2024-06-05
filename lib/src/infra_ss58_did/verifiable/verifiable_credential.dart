@@ -6,7 +6,6 @@ import 'package:infra_did_dart/src/infra_ss58_did/model/exception.dart';
 import 'package:infra_did_dart/src/infra_ss58_did/model/infra_ss58_did_document.dart';
 import 'package:infra_did_dart/src/infra_ss58_did/model/signer.dart';
 import 'package:infra_did_dart/src/infra_ss58_did/resolver/resolver.dart';
-import 'package:infra_did_dart/src/infra_ss58_did/util/jsonLdContext/ed25519_signature.dart';
 import 'package:infra_did_dart/src/infra_ss58_did/util/key_convert.dart';
 import 'package:json_ld_processor/json_ld_processor.dart';
 import 'package:crypto/crypto.dart';
@@ -17,8 +16,7 @@ class InfraSS58VerifiableCredential {
   Future<Map<String, dynamic>> issueVc(Map<String, dynamic> credential,
       String issuerDid, CredentialSigner issuerSigner) async {
     var proofOptions = {
-      '@context': ed25519ContextIri,
-      'type': issuerSigner.signatureType,
+      'type': issuerSigner.signatureName,
       'proofPurpose': 'assertionMethod',
       'verificationMethod': issuerDid + "#" + issuerSigner.keyId,
       'created': DateTime.now().toUtc().toIso8601String()
@@ -37,13 +35,13 @@ class InfraSS58VerifiableCredential {
         ed.sign(ed.PrivateKey(privateKey), Uint8List.fromList(hash));
 
     proofOptions['proofValue'] = 'z${base58BitcoinEncode(signature)}';
-    credential["proofOptions"] = proofOptions;
+    credential["proof"] = proofOptions;
     return credential;
   }
 
   Future<bool> verifyVc(Map<String, dynamic> verifiableCredential,
       InfraSS58DIDResolver resolver) async {
-    var proofOptions = verifiableCredential['proofOptions'];
+    var proofOptions = verifiableCredential['proof'];
 
     var issuerKeyId = proofOptions['verificationMethod'];
     InfraSS58DIDDocument issuerDocument =
@@ -69,7 +67,7 @@ class InfraSS58VerifiableCredential {
     String pOptions = await JsonLdProcessor.normalize(proofOptions,
         options: JsonLdOptions(safeMode: false, documentLoader: loadDocument));
 
-    verifiableCredential.remove('proofOptions');
+    verifiableCredential.remove('proof');
     List<int> hashToSign = await _dataToHash(verifiableCredential);
 
     var pOptionsHash = sha256.convert(utf8.encode(pOptions)).bytes;

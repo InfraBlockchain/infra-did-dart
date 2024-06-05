@@ -26,35 +26,46 @@ Future<void> main() async {
         seed: didSet.seed,
         mnemonic: didSet.mnemonic);
 
-    String vc = """{
+    String unsignedVP = """
+{
   "@context": [
     "https://www.w3.org/2018/credentials/v1",
     "https://www.w3.org/2018/credentials/examples/v1"
   ],
-  "id": "did:infra:01:5EX1sTeRrA7nwpFmapyUhMhzJULJSs9uByxHTc6YTAxsc58z",
-  "type": [
-    "VerifiableCredential"
-  ],
-  "credentialSubject": [
+  "verifiableCredential": [
     {
-      "id": "did:example:d23dd687a7dc6787646f2eb98d0"
+      "@context": [
+        "https://www.w3.org/2018/credentials/v1",
+        "https://www.w3.org/2018/credentials/examples/v1"
+      ],
+      "id": "did:infra:01:5EX1sTeRrA7nwpFmapyUhMhzJULJSs9uByxHTc6YTAxsc58z",
+      "type": [
+        "VerifiableCredential"
+      ],
+      "credentialSubject": [
+        {
+          "id": "did:example:d23dd687a7dc6787646f2eb98d0"
+        }
+      ],
+      "issuanceDate": "2024-05-23T06:08:03.039Z",
+      "issuer": "did:infra:01:5EX1sTeRrA7nwpFmapyUhMhzJULJSs9uByxHTc6YTAxsc58z",
+      "proof": {
+        "type": "Ed25519Signature2020",
+        "proofPurpose": "assertionMethod",
+        "verificationMethod": "did:infra:01:5EX1sTeRrA7nwpFmapyUhMhzJULJSs9uByxHTc6YTAxsc58z#key-2",
+        "created": "2024-06-05T01:49:27.590726Z",
+        "proofValue": "z5ogf7czdcBwWmPy6ZmzpjsYYnSkWKwic3uF4Ac7otXcPQcPNidtAUsrULz3UwS4YxtaEV4J2AoMJCgSE7TZ794Bt"
+      }
     }
   ],
-  "issuanceDate": "2024-05-23T06:08:03.039Z",
-  "issuer": "did:infra:01:5EX1sTeRrA7nwpFmapyUhMhzJULJSs9uByxHTc6YTAxsc58z",
-  "proofOptions": {
-    "@context": "https://w3id.org/security/suites/ed25519-2020/v1",
-    "type": "Ed25519",
-    "proofPurpose": "assertionMethod",
-    "verificationMethod": "did:infra:01:5EX1sTeRrA7nwpFmapyUhMhzJULJSs9uByxHTc6YTAxsc58z#key-2",
-    "created": "2024-05-30T04:59:40.572077Z",
-    "proofValue": "z5ogf7czdcBwWmPy6ZmzpjsYYnSkWKwic3uF4Ac7otXcPQcPNidtAUsrULz3UwS4YxtaEV4J2AoMJCgSE7TZ794Bt"
-  }
+  "id": "http://example.edu/credentials/2803",
+  "type": ["VerifiablePresentation", "CredentialManagerPresentation"],
+  "holder": "did:infra:01:5EX1sTeRrA7nwpFmapyUhMhzJULJSs9uByxHTc6YTAxsc58z"
 }
     """;
 
-    final vp = await InfraSS58VerifiablePresentation()
-        .issueVp(jsonDecode(vc), infraSS58DID.didSet.did, cs, "challenge");
+    final vp = await InfraSS58VerifiablePresentation().issueVp(
+        jsonDecode(unsignedVP), infraSS58DID.didSet.did, cs, "challenge");
     print(jsonEncode(vp));
 
     final resolver = InfraSS58DIDResolver(
@@ -62,7 +73,7 @@ Future<void> main() async {
     );
 
     final isVerified =
-        await InfraSS58VerifiableCredential().verifyVc(vp, resolver);
+        await InfraSS58VerifiablePresentation().verifyVp(vp, resolver);
     print(isVerified);
   });
 }
