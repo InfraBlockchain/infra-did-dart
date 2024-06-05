@@ -1,6 +1,6 @@
 name: infra_did_dart
 description: Infra DID Dart Library
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/InfraBlockchain/infra-did-dart
 
 environment:
