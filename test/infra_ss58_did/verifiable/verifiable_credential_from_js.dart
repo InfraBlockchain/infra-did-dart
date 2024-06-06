@@ -1,7 +1,6 @@
 import "dart:convert";
 
 import "package:infra_did_dart/infra_did_dart.dart";
-import "package:infra_did_dart/src/infra_ss58_did/model/infra_ss58_did_set.dart";
 import "package:test/test.dart";
 
 Future<void> main() async {

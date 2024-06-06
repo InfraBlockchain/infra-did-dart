@@ -13,12 +13,16 @@ import 'package:ed25519_edwards/ed25519_edwards.dart' as ed;
 import 'package:base_codecs/base_codecs.dart';
 
 class InfraSS58VerifiableCredential {
-  Future<Map<String, dynamic>> issueVc(Map<String, dynamic> credential,
-      String issuerDid, CredentialSigner issuerSigner) async {
+  Future<Map<String, dynamic>> issueVc(
+    Map<String, dynamic> credential,
+    String issuerDid,
+    CredentialSigner issuerSigner, {
+    String? purpose,
+  }) async {
     var proofOptions = {
       "@context": "https://w3id.org/security/v2",
       'type': issuerSigner.signatureName,
-      'proofPurpose': 'assertionMethod',
+      'proofPurpose': purpose != null ? purpose : 'assertionMethod',
       'verificationMethod': issuerDid + "#" + issuerSigner.keyId,
       'created': DateTime.now().toUtc().toIso8601String()
     };

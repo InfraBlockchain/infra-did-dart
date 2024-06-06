@@ -16,14 +16,15 @@ class InfraSS58VerifiablePresentation {
   Future<Map<String, dynamic>> issueVp(
     Map<String, dynamic> presentation,
     String holderDid,
-    CredentialSigner holderSigner,
+    CredentialSigner holderSigner, {
+    String? purpose,
     String? challenge,
     String? domain,
-  ) async {
+  }) async {
     var proofOptions = {
       "@context": "https://w3id.org/security/v2",
       'type': holderSigner.signatureName,
-      'proofPurpose': 'assertionMethod',
+      'proofPurpose': purpose != null ? purpose : 'assertionMethod',
       'verificationMethod': holderDid + "#" + holderSigner.keyId,
       'created': DateTime.now().toUtc().toIso8601String()
     };
@@ -47,17 +48,17 @@ class InfraSS58VerifiablePresentation {
         ed.sign(ed.PrivateKey(privateKey), Uint8List.fromList(hash));
 
     proofOptions['proofValue'] = 'z${base58BitcoinEncode(signature)}';
-    // proofOptions.remove('@context');
+    proofOptions.remove('@context');
     presentation["proof"] = proofOptions;
     return presentation;
   }
 
   Future<bool> verifyVp(
     Map<String, dynamic> verifiablePresentation,
-    InfraSS58DIDResolver resolver,
+    InfraSS58DIDResolver resolver, {
     String? challenge,
     String? domain,
-  ) async {
+  }) async {
     var proofOptions = verifiablePresentation['proof'];
     if (challenge != null) {
       if (proofOptions['challenge'] != challenge) {
